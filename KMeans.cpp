@@ -217,14 +217,14 @@ std::vector<Group> buildInitialPoint(int k, std::vector<Node>& v) {
     std::vector<Group> centroid(k);
     int len = v.size();
     srand((unsigned)time(NULL));
-    centroid[0].nodes.push_back(v[rand() / len]);
-    centroid[0].center = centroid.nodes[0];
+    centroid[0].nodes.push_back(v[/*rand() % len*/ 0]);
+    centroid[0].center = centroid[0].nodes[0];
 
     int found = 1;
     double minv = DINF, mid = -1, dis = 0, maxv = -1;
     while (found < k) {
         for (int i = 0; i < len; ++i) {
-            for (unsigned int j = 0; j < centroid.size(); ++j) {
+            for (int j = 0; j < found; ++j) {
                 dis = QuadraticEuclideanDistance(centroid[j].center, v[i]);
                 minv = std::min(minv, dis);
             }
@@ -241,14 +241,18 @@ std::vector<Group> buildInitialPoint(int k, std::vector<Node>& v) {
 }
 
 std::vector<Group> KMeans(std::vector<Node>& v, int k) {
-    std::vector<Group> centroid(k);
     std::vector<Node> preCenters(k);
+    
+    // std::vector<Group> centroid = buildInitialPoint(k, v);
+    std::vector<Group> centroid(k);
     int testlen = v.size();
     for (int i = 0; i < k; ++i) {
         centroid[i].nodes.push_back(v[i]);
         centroid[i].center = v[i];
         preCenters.push_back(centroid[i].center);
     }   // 初始化各簇，设置质心
+
+    // std::vector<Group> centroid = buildInitialPoint(k, v);
 
     double dis = 0, mdis = 0, mid = 0;
     int times = 0;
