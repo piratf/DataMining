@@ -195,7 +195,7 @@ struct Node
 
 void normaliztion(std::vector<Node>& v) {
     if (v.size() < 1) {
-        printf("Normaliztion: error - empty vector!\n");
+        fprintf(stderr, "Normaliztion: error - empty vector!\n");
         return;
     }
     int len = v.size();
@@ -217,13 +217,16 @@ std::vector<Group> buildInitialPoint(int k, std::vector<Node>& v) {
     std::vector<Group> centroid(k);
     int len = v.size();
     srand((unsigned)time(NULL));
-    centroid[0].nodes.push_back(v[/*rand() % len*/ 0]);
+    centroid[0].nodes.push_back(v[rand() % len /*0*/]);
     centroid[0].center = centroid[0].nodes[0];
 
     int found = 1;
-    double minv = DINF, mid = -1, dis = 0, maxv = -1;
+    double minv = DINF, dis = 0, maxv = -1;
+    int mid = 0;
     while (found < k) {
+        maxv = -1;
         for (int i = 0; i < len; ++i) {
+            minv = DINF;
             for (int j = 0; j < found; ++j) {
                 dis = QuadraticEuclideanDistance(centroid[j].center, v[i]);
                 minv = std::min(minv, dis);
@@ -242,17 +245,23 @@ std::vector<Group> buildInitialPoint(int k, std::vector<Node>& v) {
 
 std::vector<Group> KMeans(std::vector<Node>& v, int k) {
     std::vector<Node> preCenters(k);
-    
-    // std::vector<Group> centroid = buildInitialPoint(k, v);
-    std::vector<Group> centroid(k);
     int testlen = v.size();
-    for (int i = 0; i < k; ++i) {
-        centroid[i].nodes.push_back(v[i]);
-        centroid[i].center = v[i];
-        preCenters.push_back(centroid[i].center);
-    }   // 初始化各簇，设置质心
+    
+    std::vector<Group> centroid = buildInitialPoint(k, v);
+    // std::vector<Group> centroid(k);
+    // for (int i = 0; i < k; ++i) {
+    //     centroid[i].nodes.push_back(v[i]);
+    //     centroid[i].center = v[i];
+    //     preCenters.push_back(centroid[i].center);
+    // }   // 初始化各簇，设置质心
 
     // std::vector<Group> centroid = buildInitialPoint(k, v);
+
+    printf("Print initial center id:\n");
+    for (int i = 0; i < k; ++i) {
+        printf("%d\n", centroid[i].center.id);
+    }
+    puts("=====================================");
 
     double dis = 0, mdis = 0, mid = 0;
     int times = 0;
@@ -279,6 +288,7 @@ std::vector<Group> KMeans(std::vector<Node>& v, int k) {
     }
 
     printf("evaluation: %lf\n", evaluation(centroid));
+    puts("=====================================");
 
     return centroid;
 }
