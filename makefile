@@ -1,14 +1,15 @@
 targets = demo.exe
-objects = $(targets:.exe=.o) KMeans.o
+objects = $(targets:.exe=.o) general.o kmeans.o kmedoids.o
 cppFlags = -std=c++11 -pedantic -Wall
 CC = g++
 
 $(targets): $(objects)
 	$(CC) $(cppFlags) $(objects) -o $(targets)
 
-test.o: KMeans.h
-KMeans.o: KMeans.h
-
+test.o: kmeans.h
+general.o: general.h
+kmeans.o: structs.h general.o kmeans.h
+kmedoids.o: kmedoids.h
 # %.d: %.c
 # 	@set -e; rm -f $@; \
 #          $(CC) -MM $(cppFlags) $< > $@.$$$$; \

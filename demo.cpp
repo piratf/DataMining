@@ -1,4 +1,7 @@
-#include "KMeans.h"
+#include "general.h"
+#include "structs.h"
+#include "kmeans.h"
+#include "kmedoids.h"
 
 int main() {
 #ifndef ONLINE_JUDGE
@@ -28,25 +31,13 @@ int main() {
         for (int i = 0; i < n; ++i) {
             test[i].display();
         }
-        puts("=====================================");
+        puts("=====================================\n");
 
-        int k = 3;
+        unsigned k = 3;
 
-        std::vector<Group> g = KMeans(test, k, true);
-
-        puts("Print the clustering results Data:");
-        puts("=====================================");
-        if (!g.size()) {
-            fprintf(stderr, "NULL results!\n");
-            return -1;
-        }
-        for (int i = 0; i < k; ++i) {
-            printf("Centroid: %d\n", i + 1);
-            int len = g[i].nodes.size();
-            for (int j = 0; j < len; ++j) {
-                g[i].nodes[j].display();
-            }
-        }
+        KMeans(test, k);
+        KMeans(test, k, true);
+        KMedoids(test, k);
     }
     return 0;
 }

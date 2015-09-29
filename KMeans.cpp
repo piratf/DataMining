@@ -1,124 +1,25 @@
 #include <iostream>
-#include <vector>
 #include <cmath>
+#include <vector>
+#include <iostream>
+#include <algorithm>
 #include <numeric>
 #include <cstdlib>
 #include <ctime>
-#include "KMeans.h"
+#include "structs.h"
+#include "general.h"
+#include "kmeans.h"
 
-const double DINF = 1e12;
-const int IINF = 0x3f3f3f3f;
+std::vector<Group> KMeans(std::vector<Node>& v, unsigned k, bool plus) {
+    const char* name = plus ? "KMeans" : "KMeans++";
+    printf("Start %s:\n", name);
+    puts("=====================================");
 
-double evaluation(std::vector<Group>& centroid) {
-    double sum = 0;
-    int len = centroid.size();
-    for (int i = 0; i < len; ++i) {
-        sum += centroid[i].getEuclideanDistance();
-    }
-    return sum;
-}
-
-void normaliztion(std::vector<Node>& v) {
-    if (v.size() < 1) {
-        fprintf(stderr, "Normaliztion: error - empty vector!\n");
-        return;
-    }
-    int len = v.size();
-    int alen = v[0].attribute.size();
-    for (int i = 0; i < len; ++i) {
-        double minv = DINF, maxv = -1;
-        for (int j = 0; j < alen; ++j) {
-            minv = std::min(v[i].attribute[j], minv);
-            maxv = std::max(v[i].attribute[j], maxv);
-        }
-        double gap = maxv - minv;
-        for (int j = 0; j < alen; ++j) {
-            v[i].attribute[j] = (v[i].attribute[j] - minv) / (gap);
-        }
-    }
-}
-
-// 直接取遍历点到最近中心点距离的最大值最为下一个中心点
-std::vector<Group> buildInitialPoint(int k, std::vector<Node>& v) {
-    std::vector<Group> centroid(k);
-    int len = v.size();
-    srand((unsigned)time(NULL));
-    centroid[0].nodes.push_back(v[rand() % len /*0*/]);
-    centroid[0].center = centroid[0].nodes[0];
-
-    int found = 1;
-    double minv = DINF, dis = 0, maxv = -1;
-    int mid = 0;
-    while (found < k) {
-        maxv = -1;
-        for (int i = 0; i < len; ++i) {
-            minv = DINF;
-            for (int j = 0; j < found; ++j) {
-                dis = Distance::QuadraticEuclideanDistance(centroid[j].center, v[i]);
-                minv = std::min(minv, dis);
-            }
-            if (minv > maxv) {
-                maxv = minv;
-                mid = i;
-            }
-        }
-        centroid[found].nodes.push_back(v[mid]);
-        centroid[found].center = v[mid];
-        found++;
-    }
-    return centroid;
-}
-
-// 让各点到最近中心点距离最大的点概率最大
-std::vector<Group> buildInitialPointPlus(int k, std::vector<Node>& v) {
-    std::vector<Group> centroid(k);
-    int len = v.size();
-    srand((unsigned)time(NULL));
-    centroid[0].nodes.push_back(v[rand() % len /*0*/]);
-    centroid[0].center = centroid[0].nodes[0];
-
-    int found = 1;
-    double minv = DINF, dis = 0;
-    double* disList = (double*)malloc((len + 10) * sizeof(double));
-    std::cout << disList[0] << std::endl;
-
-    while (found < k) {
-        for (int i = 0; i < len; ++i) {
-            minv = DINF;
-            for (int j = 0; j < found; ++j) {
-                dis = Distance::QuadraticEuclideanDistance(centroid[j].center, v[i]);
-                minv = std::min(minv, dis);
-            }
-            disList[i] = minv;  // 点到最近中心点的距离
-        }
-
-        double disSum = std::accumulate(disList, disList + len, 0);
-
-        disSum = 0;
-        for (int i = 0; i < len; ++i) {
-            disSum += disList[i];
-        }
-
-        srand((unsigned int)time(0));
-        double randNum = static_cast <double> (rand()) / (static_cast <double> (RAND_MAX / disSum));
-        int cnt = -1;   // 初始化偏移量
-        while (randNum >= 0) {
-            randNum -= disList[++cnt];
-        }
-
-        centroid[found].nodes.push_back(v[cnt]);
-        centroid[found].center = v[cnt];
-        found++;
-    }
-    return centroid;
-}
-
-std::vector<Group> KMeans(std::vector<Node>& v, int k, bool plus) {
     std::vector<Node> preCenters(k);
-    int testlen = v.size();
+    unsigned testlen = v.size();
 
-    std::vector<Group> centroid = plus ? 
-        buildInitialPointPlus(k, v) : buildInitialPoint(k, v);
+    std::vector<Group> centroid =
+        plus ? buildInitialPointPlus(k, v) : buildInitialPoint(k, v);
     // std::vector<Group> centroid(k);
     // for (int i = 0; i < k; ++i) {
     //     centroid[i].nodes.push_back(v[i]);
@@ -129,19 +30,19 @@ std::vector<Group> KMeans(std::vector<Node>& v, int k, bool plus) {
     // std::vector<Group> centroid = buildInitialPoint(k, v);
 
     printf("Print initial center id:\n");
-    for (int i = 0; i < k; ++i) {
+    for (unsigned i = 0; i < k; ++i) {
         printf("%d\n", centroid[i].center.id);
     }
     puts("=====================================");
 
     double dis = 0, mdis = 0, mid = 0;
-    int times = 0;
+    unsigned times = 0;
 
     while (checkProcess(k, centroid, preCenters, times++)) {
 
-        for (int i = 0; i < testlen; ++i) {
+        for (unsigned i = 0; i < testlen; ++i) {
             mdis = DINF;
-            for (int j = 0; j < k; ++j) {
+            for (unsigned j = 0; j < k; ++j) {
                 dis = sqrt(Distance::QuadraticEuclideanDistance(v[i], centroid[j].center));  // 计算欧氏距离
                 if (dis < mdis) {
                     mdis = dis;
@@ -153,13 +54,13 @@ std::vector<Group> KMeans(std::vector<Node>& v, int k, bool plus) {
                 centroid[mid].nodes.push_back(v[i]);    // 在最近簇中加入节点i
             }
         }
-        for (int i = 0; i < k; ++i) {
+        for (unsigned i = 0; i < k; ++i) {
             centroid[i].reCalCenter();
         }
     }
 
-    printf("evaluation: %lf\n", evaluation(centroid));
-    puts("=====================================");
-
+    evaluation(centroid, true);
+    printf("End Of %s.\n", name);
+    puts("=====================================\n");
     return centroid;
 }

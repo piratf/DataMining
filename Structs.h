@@ -27,8 +27,8 @@ public:
      * 根据属性判断两个对象是否相等
      */
     bool operator == (const Node& other) {
-        int len = attribute.size();
-        for (int i = 0; i < len; ++i) {
+        unsigned len = attribute.size();
+        for (unsigned i = 0; i < len; ++i) {
             if (attribute[i] -= other.attribute[i] > 1e-8) {
                 return false;
             }
@@ -40,8 +40,8 @@ public:
      * 根据属性判断两个对象是否不相等
      */
     bool operator != (const Node& other) {
-        int len = attribute.size();
-        for (int i = 0; i < len; ++i) {
+        unsigned len = attribute.size();
+        for (unsigned i = 0; i < len; ++i) {
             if (attribute[i] - other.attribute[i] > 1e-8) {
                 return true;
             }
@@ -54,9 +54,9 @@ public:
      * @author piratf
      */
     void display() {
-        int len = attribute.size();
+        unsigned len = attribute.size();
         printf("%d ", id);
-        for (int i = 0; i < len; ++i) {
+        for (unsigned i = 0; i < len; ++i) {
             printf("%lf%c", attribute[i], i == len - 1 ? '\n' : ' ');
         }
     }
@@ -75,14 +75,14 @@ class Distance
     * @return     欧氏距离平方
     */
 public:
-    static double QuadraticEuclideanDistance(Node& lhs, Node& rhs) {
+    static double QuadraticEuclideanDistance(const Node& lhs, const Node& rhs) {
     if (lhs.attribute.size() != rhs.attribute.size()) {
         fprintf(stderr, "%d : %d\n", lhs.attribute.size(), rhs.attribute.size());
         fprintf(stderr, "Different kind of Nodes\n");
         return -1;
     }
     double quadraticSum = 0;
-    for (unsigned int i = 0; i < lhs.attribute.size(); ++i) {
+    for (unsigned i = 0; i < lhs.attribute.size(); ++i) {
         quadraticSum += (lhs.attribute[i] - rhs.attribute[i]) * (lhs.attribute[i] - rhs.attribute[i]);
     }
     return quadraticSum;
@@ -113,17 +113,16 @@ public:
      * @author piratf
      */
     void reCalCenter() {
-        int len = center.attribute.size();
-        int nlen = nodes.size();    // 簇中节点的个数
-        for (int i = 0; i < len; ++i) {
+        unsigned len = center.attribute.size();
+        unsigned nlen = nodes.size();    // 簇中节点的个数
+        for (unsigned i = 0; i < len; ++i) {
             double sum = 0;
-            for (int j = 0; j < nlen; ++j) {
+            for (unsigned j = 0; j < nlen; ++j) {
                 sum += nodes[j].attribute[i];
             }
             center.attribute[i] = sum / (double)nlen;
         }
     }
-
 
     /**
      * 判断簇中是否已经存在当前id
@@ -132,8 +131,8 @@ public:
      * @return     [description]
      */
     bool idConflict(int _id) {
-        int len = nodes.size();
-        for (int i = 0; i < len; ++i) {
+        unsigned len = nodes.size();
+        for (unsigned i = 0; i < len; ++i) {
             if (nodes[i].id == _id) {
                 return true;
             }
@@ -148,9 +147,23 @@ public:
      */
     double getEuclideanDistance() {
         double sum = 0.0;
-        int len = nodes.size();
-        for (int i = 0; i < len; ++i) {
+        unsigned len = nodes.size();
+        for (unsigned i = 0; i < len; ++i) {
             sum += Distance::QuadraticEuclideanDistance(nodes[i], center);
+        }
+        return sum;
+    }
+
+    /**
+     * 获取当前簇的欧氏距离平方和
+     * @author piratf
+     * @return 当前簇的欧氏距离平方和
+     */
+    double getEuclideanDistanceWithOtherCenter(const Node& otherCenter) {
+        double sum = 0.0;
+        unsigned len = nodes.size();
+        for (unsigned i = 0; i < len; ++i) {
+            sum += Distance::QuadraticEuclideanDistance(nodes[i], otherCenter);
         }
         return sum;
     }
