@@ -77,8 +77,8 @@ class Distance
 public:
     static double QuadraticEuclideanDistance(Node& lhs, Node& rhs) {
     if (lhs.attribute.size() != rhs.attribute.size()) {
-        printf("%d : %d\n", lhs.attribute.size(), rhs.attribute.size());
-        printf("Different kind of Nodes\n");
+        fprintf(stderr, "%d : %d\n", lhs.attribute.size(), rhs.attribute.size());
+        fprintf(stderr, "Different kind of Nodes\n");
         return -1;
     }
     double quadraticSum = 0;

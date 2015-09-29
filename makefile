@@ -1,5 +1,5 @@
-objects = test.o KMeans.o
-targets = test.exe
+targets = demo.exe
+objects = $(targets:.exe=.o) KMeans.o
 cppFlags = -std=c++11 -pedantic -Wall
 CC = g++
 

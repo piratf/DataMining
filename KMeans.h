@@ -48,6 +48,6 @@ void normaliztion(std::vector<Node>& v);
  * 设置初始点簇
  */
 std::vector<Group> buildInitialPoint(int k, std::vector<Node>& v);
-std::vector<Group> KMeans(std::vector<Node>& v, int k);
+std::vector<Group> KMeans(std::vector<Node>& v, int k, bool plus = false);
 
 #endif

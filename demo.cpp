@@ -1,9 +1,9 @@
 #include "KMeans.h"
 
 int main() {
-    #ifndef ONLINE_JUDGE
+#ifndef ONLINE_JUDGE
     freopen("KMeans.txt", "r", stdin);
-    #endif
+#endif
     int n, m;
     while (~scanf("%d %d", &n, &m)) {
         if (n == 0) {
@@ -22,6 +22,9 @@ int main() {
 
         normaliztion(test);
 
+        puts("Print Input Data:");
+        puts("=====================================");
+
         for (int i = 0; i < n; ++i) {
             test[i].display();
         }
@@ -29,14 +32,21 @@ int main() {
 
         int k = 3;
 
-        std::vector<Group> g = KMeans(test, k);
+        std::vector<Group> g = KMeans(test, k, true);
 
+        puts("Print the clustering results Data:");
+        puts("=====================================");
+        if (!g.size()) {
+            fprintf(stderr, "NULL results!\n");
+            return -1;
+        }
         for (int i = 0; i < k; ++i) {
-            printf("Centroid: %d\n", i+1);
+            printf("Centroid: %d\n", i + 1);
             int len = g[i].nodes.size();
             for (int j = 0; j < len; ++j) {
                 g[i].nodes[j].display();
             }
         }
     }
+    return 0;
 }

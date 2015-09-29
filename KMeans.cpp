@@ -38,6 +38,7 @@ void normaliztion(std::vector<Node>& v) {
     }
 }
 
+// 直接取遍历点到最近中心点距离的最大值最为下一个中心点
 std::vector<Group> buildInitialPoint(int k, std::vector<Node>& v) {
     std::vector<Group> centroid(k);
     int len = v.size();
@@ -68,11 +69,56 @@ std::vector<Group> buildInitialPoint(int k, std::vector<Node>& v) {
     return centroid;
 }
 
-std::vector<Group> KMeans(std::vector<Node>& v, int k) {
+// 让各点到最近中心点距离最大的点概率最大
+std::vector<Group> buildInitialPointPlus(int k, std::vector<Node>& v) {
+    std::vector<Group> centroid(k);
+    int len = v.size();
+    srand((unsigned)time(NULL));
+    centroid[0].nodes.push_back(v[rand() % len /*0*/]);
+    centroid[0].center = centroid[0].nodes[0];
+
+    int found = 1;
+    double minv = DINF, dis = 0;
+    double* disList = (double*)malloc((len + 10) * sizeof(double));
+    std::cout << disList[0] << std::endl;
+
+    while (found < k) {
+        for (int i = 0; i < len; ++i) {
+            minv = DINF;
+            for (int j = 0; j < found; ++j) {
+                dis = Distance::QuadraticEuclideanDistance(centroid[j].center, v[i]);
+                minv = std::min(minv, dis);
+            }
+            disList[i] = minv;  // 点到最近中心点的距离
+        }
+
+        double disSum = std::accumulate(disList, disList + len, 0);
+
+        disSum = 0;
+        for (int i = 0; i < len; ++i) {
+            disSum += disList[i];
+        }
+
+        srand((unsigned int)time(0));
+        double randNum = static_cast <double> (rand()) / (static_cast <double> (RAND_MAX / disSum));
+        int cnt = -1;   // 初始化偏移量
+        while (randNum >= 0) {
+            randNum -= disList[++cnt];
+        }
+
+        centroid[found].nodes.push_back(v[cnt]);
+        centroid[found].center = v[cnt];
+        found++;
+    }
+    return centroid;
+}
+
+std::vector<Group> KMeans(std::vector<Node>& v, int k, bool plus) {
     std::vector<Node> preCenters(k);
     int testlen = v.size();
 
-    std::vector<Group> centroid = buildInitialPoint(k, v);
+    std::vector<Group> centroid = plus ? 
+        buildInitialPointPlus(k, v) : buildInitialPoint(k, v);
     // std::vector<Group> centroid(k);
     // for (int i = 0; i < k; ++i) {
     //     centroid[i].nodes.push_back(v[i]);
