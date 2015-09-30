@@ -5,7 +5,7 @@
 
 int main() {
 #ifndef ONLINE_JUDGE
-    freopen("KMeans.txt", "r", stdin);
+    freopen(".\\data\\KMeans.txt", "r", stdin);
 #endif
     int n, m;
     while (~scanf("%d %d", &n, &m)) {

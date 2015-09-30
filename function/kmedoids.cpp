@@ -30,7 +30,6 @@ std::vector<Group> KMedoids(std::vector<Node>& v, unsigned k, bool plus) {
     puts("=====================================");
 
     double dis = 0, mdis = 0, mid = 0;
-    unsigned times = 0;
 
     // 指派每个剩余样本点给最近中心点代表的簇
     // 外层循环遍历点

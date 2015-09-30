@@ -121,7 +121,7 @@ std::vector<Group> buildInitialPointPlus(unsigned k, std::vector<Node>& v) {
         double disSum = std::accumulate(disList, disList + len, 0);
 
         disSum = 0;
-        for (int i = 0; i < len; ++i) {
+        for (unsigned i = 0; i < len; ++i) {
             disSum += disList[i];
         }
 

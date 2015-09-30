@@ -16,7 +16,7 @@ bool inline checkProcess(unsigned k, std::vector<Group>& centroid, std::vector<N
     }
     else {
         bool flag = true;
-        for (int i = 0; i < k; ++i) {
+        for (unsigned i = 0; i < k; ++i) {
             if (preCenters[i] != centroid[i].center) {
                 flag = false;
                 preCenters[i] = centroid[i].center;

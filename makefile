@@ -1,23 +1,19 @@
 targets = demo.exe
-objects = $(targets:.exe=.o) general.o kmeans.o kmedoids.o
+subdir = function
+objects = subdir/libFunctions.a
 cppFlags = -std=c++11 -pedantic -Wall
 CC = g++
 
 $(targets): $(objects)
-	$(CC) $(cppFlags) $(objects) -o $(targets)
+	g++ demo.cpp -Ifunction/headers -Lfunction -lfunctions -o demo.exe
 
-test.o: kmeans.h
-general.o: general.h
-kmeans.o: structs.h general.o kmeans.h
-kmedoids.o: kmedoids.h
-# %.d: %.c
-# 	@set -e; rm -f $@; \
-#          $(CC) -MM $(cppFlags) $< > $@.$$$$; \
-#          sed 's,\($*\)\.o[ :]*,\1.o $@ : ,g' < $@.$$$$ > $@; \
-#          rm -f $@.$$$$
+subdir/libFunctions.a:
+	cd $(subdir) && $(MAKE)
 
 .PHONY: clean cleanall
 cleanall: clean
+	-cd $(subdir) && $(MAKE) cleanall
 	-rm $(targets)
 clean:
-	-rm $(filter %.o, $(objects))
+	-rm $(targets:.exe=.o)
+	-cd $(subdir) && $(MAKE) clean
