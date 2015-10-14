@@ -67,6 +67,7 @@ public:
  */
 class Distance
 {
+public:
     /**
     * 欧氏距离平方
     * @author piratf
@@ -74,18 +75,48 @@ class Distance
     * @param  rhs 右侧节点
     * @return     欧氏距离平方
     */
-public:
     static double QuadraticEuclideanDistance(const Node& lhs, const Node& rhs) {
-    if (lhs.attribute.size() != rhs.attribute.size()) {
-        fprintf(stderr, "%d : %d\n", lhs.attribute.size(), rhs.attribute.size());
-        fprintf(stderr, "Different kind of Nodes\n");
-        return -1;
+        if (lhs.attribute.size() != rhs.attribute.size()) {
+            fprintf(stderr, "%d : %d\n", lhs.attribute.size(), rhs.attribute.size());
+            fprintf(stderr, "Different kind of Nodes\n");
+            return -1;
+        }
+        double quadraticSum = 0;
+        for (unsigned i = 0; i < lhs.attribute.size(); ++i) {
+            quadraticSum += (lhs.attribute[i] - rhs.attribute[i]) * (lhs.attribute[i] - rhs.attribute[i]);
+        }
+        return quadraticSum;
     }
-    double quadraticSum = 0;
-    for (unsigned i = 0; i < lhs.attribute.size(); ++i) {
-        quadraticSum += (lhs.attribute[i] - rhs.attribute[i]) * (lhs.attribute[i] - rhs.attribute[i]);
+
+    static double getAverageNum(const std::vector<double> &dvec) {
+        double sum = 0;
+        for (double dn : dvec) {
+            sum += dn;
+        }
+        return sum / dvec.size();
     }
-    return quadraticSum;
+
+    /**
+     * 获取两个向量的马氏距离
+     * @author piratf
+     * @param  lhs 向量1
+     * @param  rhs 向量2
+     * @return     马氏距离的值 double
+     */
+    static double getMahalanobisDistance(const std::vector<double> &lhs, const std::vector<double> &rhs) {
+        // 获取两个向量的平均值
+        double lavg = getAverageNum(lhs), ravg = getAverageNum(rhs);
+        // 暂存协方差值, 协方差和
+        double cov = 0, covSum = 0;
+        Matrix mat(2, 2);
+        // 遍历矩阵的行和列
+        int r = 0, l = 0;
+        for (double dni : lhs) {
+            for (double dnj : rhs) {
+
+            }
+        }
+        return 0;
     }
 };
 
@@ -167,6 +198,26 @@ public:
         }
         return sum;
     }
+
+   
 };  // 簇，存储一个簇的对象数组。
+
+class Matrix
+{
+public:
+    Matrix(int _x, int _y) {
+        std::vector< std::vector<double> > temp(_x);
+        data = temp;
+        for (auto &row : data) {
+            std::vector<double> t(_y);
+            row = t;
+        }
+    }
+
+    Matrix();
+    ~Matrix();
+
+    std::vector< std::vector<double> > data;
+};
 
 #endif

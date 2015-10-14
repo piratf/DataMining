@@ -23,8 +23,9 @@ double evaluation(std::vector<Group>& centroid, bool display) {
         puts("Print the clustering results Data:");
         puts("=====================================");
         for (unsigned i = 0; i < len; ++i) {
-            printf("Centroid: %d\n", i + 1);
             unsigned nlen = centroid[i].nodes.size();
+            printf("Centroid: %d, count: %d\n", i + 1, nlen);
+            puts("=====================================");
             for (unsigned j = 0; j < nlen; ++j) {
                 centroid[i].nodes[j].display();
             }
@@ -34,7 +35,13 @@ double evaluation(std::vector<Group>& centroid, bool display) {
     return sum;
 }
 
-// get SSE
+/**
+ * 通过欧氏距离获得误差平方和
+ * @author piratf
+ * @param  centroid    聚类簇的集合
+ * @param  otherCenter 中心点
+ * @return             欧氏距离
+ */
 double getSSE(std::vector<Group>& centroid, const Node& otherCenter) {
     double sum = 0;
     int len = centroid.size();
@@ -50,20 +57,22 @@ double getSSE(std::vector<Group>& centroid, const Node& otherCenter) {
  * @param  v 输入的数据集
  */
 void normaliztion(std::vector<Node>& v) {
-    if (v.size() < 1) {
+    if (!v.size()) {
         fprintf(stderr, "Normaliztion: error - empty vector!\n");
         return;
     }
-    int len = v.size();
-    int alen = v[0].attribute.size();
-    for (int i = 0; i < len; ++i) {
-        double minv = DINF, maxv = -1;
-        for (int j = 0; j < alen; ++j) {
+    auto len = v.size();
+    auto alen = v[0].attribute.size();
+    double minv = DINF, maxv = -1;
+    for (decltype(len) i = 0; i != len; ++i) {
+        for (decltype(len) j = 0; j != alen; ++j) {
             minv = std::min(v[i].attribute[j], minv);
             maxv = std::max(v[i].attribute[j], maxv);
         }
-        double gap = maxv - minv;
-        for (int j = 0; j < alen; ++j) {
+    }
+    double gap = maxv - minv;
+    for (decltype(len) i = 0; i != len; ++i) {
+        for (decltype(len) j = 0; j != alen; ++j) {
             v[i].attribute[j] = (v[i].attribute[j] - minv) / (gap);
         }
     }

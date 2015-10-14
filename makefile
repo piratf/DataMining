@@ -1,11 +1,12 @@
 targets = demo.exe
 subdir = function
 objects = subdir/libFunctions.a
-cppFlags = -std=c++11 -pedantic -Wall
+cppFlags = -std=c++11
+# cppFlags = -std=c++11 -pedantic -Wall
 CC = g++
 
 $(targets): $(objects)
-	g++ demo.cpp -Ifunction/headers -Lfunction -lfunctions -o demo.exe
+	g++ demo.cpp -Ifunction/headers -Lfunction -lfunctions $(cppFlags) -o demo.exe
 
 subdir/libFunctions.a:
 	cd $(subdir) && $(MAKE)

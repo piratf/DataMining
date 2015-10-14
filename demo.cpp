@@ -24,7 +24,7 @@ int main() {
             }
         }
 
-        normaliztion(test);
+        // normaliztion(test);
 
         // 输出读入的数据
         puts("Print Input Data:");
@@ -38,8 +38,8 @@ int main() {
         unsigned k = 3;
 
         // KMeans(test, k);
-        // KMeans(test, k, true);
-        KMedoids(test, k);
+        KMeans(test, k, true);
+        // KMedoids(test, k);
     }
     return 0;
 }

@@ -3,7 +3,8 @@ VPATH=headers
 CC = g++
 # override CFLAGS += $(patsubst %,-I%,$(subst :, ,$(VPATH)))
 # cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH)))
-cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11 -pedantic -Wall
+cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11
+# cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11 -pedantic -Wall
 
 .PHONY: all
 all: general.o kmeans.o kmedoids.o
