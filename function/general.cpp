@@ -44,6 +44,11 @@ double getSSE(std::vector<Group>& centroid, const Node& otherCenter) {
     return sum;
 }
 
+/**
+ * 数据归一化
+ * @author piratf
+ * @param  v 输入的数据集
+ */
 void normaliztion(std::vector<Node>& v) {
     if (v.size() < 1) {
         fprintf(stderr, "Normaliztion: error - empty vector!\n");
@@ -64,7 +69,9 @@ void normaliztion(std::vector<Node>& v) {
     }
 }
 
-// 直接取遍历点到最近中心点距离的最大值最为下一个中心点
+/**
+ * 直接取遍历点到最近中心点距离的最大值最为下一个中心点
+ */
 std::vector<Group> buildInitialPoint(unsigned k, std::vector<Node>& v) {
     std::vector<Group> centroid(k);
     unsigned len = v.size();
@@ -95,7 +102,9 @@ std::vector<Group> buildInitialPoint(unsigned k, std::vector<Node>& v) {
     return centroid;
 }
 
-// 让各点到最近中心点距离最大的点概率最大
+/**
+ * 让各点到最近中心点距离最大的点概率最大
+ */
 std::vector<Group> buildInitialPointPlus(unsigned k, std::vector<Node>& v) {
     std::vector<Group> centroid(k);
     unsigned len = v.size();

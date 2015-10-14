@@ -11,7 +11,7 @@
 #include "kmeans.h"
 
 std::vector<Group> KMeans(std::vector<Node>& v, unsigned k, bool plus) {
-    const char* name = plus ? "KMeans" : "KMeans++";
+    const char* name = plus ? "KMeans++" : "KMeans";
     printf("Start %s:\n", name);
     puts("=====================================");
 
