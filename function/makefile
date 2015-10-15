@@ -11,25 +11,25 @@ cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11
 all: Node.o Group.o Distance.o general.o kmeans.o kmedoids.o Matrix.o
 	ar -cr libFunctions.a $(foreach n, $(targets), $(n).o)
 
-general.o: $(VPATH)/general.h $(VPATH)/Node.h $(VPATH)/Group.h $(VPATH)/Distance.h
+general.o: $(VPATH)/general.h $(VPATH)/Node.h $(VPATH)/Group.h $(VPATH)/Distance.h general.cpp
 	$(CC) general.cpp $(cppFlags) -c -o general.o
 
-kmeans.o: $(structs) general.o kmeans.h
+kmeans.o: $(structs) general.o kmeans.h kmeans.cpp
 	$(CC) kmeans.cpp $(cppFlags) -c -o kmeans.o
 
-kmedoids.o: general.o kmedoids.h
+kmedoids.o: general.o kmedoids.h kmedoids.cpp
 	$(CC) kmedoids.cpp $(cppFlags) -c -o kmedoids.o
 
-Node.o: Node.h
+Node.o: Node.h Node.cpp
 	$(CC) Node.cpp $(cppFlags) -c -o Node.o
 
-Group.o: Group.h
+Group.o: Group.h Group.cpp
 	$(CC) Group.cpp $(cppFlags) -c -o Group.o
 
-Distance.o: Distance.h Matrix.h
+Distance.o: Distance.h Matrix.h Node.h Group.h Distance.cpp
 	$(CC) Distance.cpp $(cppFlags) -c -o Distance.o
 
-Matrix.o: Matrix.h
+Matrix.o: Matrix.h Matrix.cpp
 	$(CC) Matrix.cpp $(cppFlags) -c -o Matrix.o
 
 .PHONY: clean cleanall

@@ -1,6 +1,7 @@
 #include "general.h"
 #include "kmeans.h"
 #include "kmedoids.h"
+#include "Distance.h"
 #include <iostream>
 
 int main() {
@@ -24,21 +25,23 @@ int main() {
             }
         }
 
+        Distance::getMahalanobisDistance(test[0].attribute, test[1].attribute);
+
         // normaliztion(test);
 
         // 输出读入的数据
-        puts("Print Input Data:");
-        puts("=====================================");
+        // puts("Print Input Data:");
+        // puts("=====================================");
 
-        for (int i = 0; i < n; ++i) {
-            test[i].display();
-        }
-        puts("=====================================\n");
+        // for (int i = 0; i < n; ++i) {
+        //     test[i].display();
+        // }
+        // puts("=====================================\n");
 
-        unsigned k = 3;
+        const unsigned k = 3;
 
         // KMeans(test, k);
-        KMeans(test, k, true);
+        // KMeans(test, k, true);
         // KMedoids(test, k);
     }
     return 0;

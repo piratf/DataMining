@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "Matrix.h"
+#include "Distance.h"
 
 /**
  * 获得矩阵的转置
@@ -18,6 +19,47 @@ Matrix Matrix::getTransposition() {
     return tran;
 }
 
+
+/**
+ * 静态函数：获取两个向量的点乘结果
+ * @author piratf
+ * @param  lhs 向量1
+ * @param  rhs 向量2
+ * @return     double:点乘的结果
+ */
+double Matrix::vectorDotProduct(const std::vector<double> lhs, std::vector<double> rhs) {
+    double ans = 0;
+    for (decltype(lhs.size()) i = 0; i != lhs.size(); ++i) {
+        ans += lhs[i] * rhs[i];
+    }
+    return ans;
+}
+
+/**
+ * 获得两个向量的协方差矩阵
+ * @author piratf
+ * @return 一个新的协方差矩阵
+ */
+Matrix Matrix::getCovarianceMatrixOfTwoVector(const std::vector<double> &lhs, const std::vector<double> &rhs) {
+    const auto lsize = lhs.size();
+    double lavg = Distance::getAverageNum(lhs), ravg = Distance::getAverageNum(rhs);
+    Matrix mat(2, 2);
+    // 获得协方差矩阵参数
+    std::vector<double> vl, vr;
+    for (double dValue : lhs) {
+        vl.push_back(dValue - lavg);
+    }
+    for (double dValue : rhs) {
+        vr.push_back(dValue - ravg);
+    }
+    // 获得协方差矩阵
+    mat.data[0][0] = Matrix::vectorDotProduct(vl, vl) / (lsize - 1);
+    mat.data[0][1] = Matrix::vectorDotProduct(vl, vr) / (lsize - 1);
+    mat.data[1][0] = Matrix::vectorDotProduct(vr, vl) / (lsize - 1);
+    mat.data[1][1] = Matrix::vectorDotProduct(vr, vr) / (lsize - 1);
+    return mat;
+}
+
 /**
  * 将矩阵的内容变成矩阵的逆
  * @author piratf
@@ -26,7 +68,7 @@ Matrix Matrix::getTransposition() {
  * @return   [description]
  */
 int Matrix::doInversion()
-{
+{   
     // double *is = new double[len];
     // double *js = new double[len];
     auto len = data.size();
@@ -34,22 +76,24 @@ int Matrix::doInversion()
     std::vector<double> js(len);
     int i, j, k;
     double dMinValue, p;
-    for ( k = 0; k < len; k++) {
+    for ( k = 0; k != len; k++) {
         dMinValue = 0.0;
-        for (i = k; i <= len - 1; i++) {
-            for (j = k; j <= len - 1; j++) {
+        for (i = k; i != len; i++) {
+            for (j = k; j != len; j++) {
+                // printf("i = %d, j = %d, data = %lf\n", i, j, data[i][j]);
                 p = fabs(data[i][j]);
+                // printf("p = %lf\n", p);
                 if (p > dMinValue) {
                     dMinValue = p; is[k] = i; js[k] = j;
                 }
             }
         }
-        if ( 0.0 == dMinValue ) {
+        if ( dMinValue - 0.0 < 1e-8 ) {
             std::cerr << "err**not inv" << std::endl;
             return -1;
         }
         if (is[k] != k) {
-            for (j = 0; j <= len - 1; j++) {
+            for (j = 0; j != len; j++) {
                 p = data[k][j];
                 data[k][j] = data[is[k]][j];
                 data[is[k]][j] = p;
@@ -63,27 +107,28 @@ int Matrix::doInversion()
             }
         }
         data[k][k] = 1.0 / data[k][k];
-        for (j = 0; j <= len - 1; j++) {
+        for (j = 0; j != len; j++) {
             if (j != k) {
                 data[k][j] *= data[k][k];
             }
         }
-        for (i = 0; i <= len - 1; i++) {
+        for (i = 0; i != len; i++) {
             if (i != k) {
-                for (j = 0; j <= len - 1; j++) {
+                for (j = 0; j != len; j++) {
                     if (j != k) {
                         data[i][j] -= data[i][k] * data[k][j];
                     }
                 }
             }
         }
-        for (i = 0; i <= len - 1; i++) {
+        // printData();
+        for (i = 0; i != len; i++) {
             if (i != k) {
                 data[i][k] = -data[i][k] * data[k][k];
             }
         }
     }
-    for ( k = len - 1; k >= 0; k--) {
+    for ( k = len - 1; k != -1; k--) {
         if (js[k] != k) {
             for (j = 0; j <= len - 1; j++) {
                 p = data[k][j];
@@ -92,7 +137,7 @@ int Matrix::doInversion()
             }
         }
         if (is[k] != k) {
-            for (i = 0; i <= len - 1; i++) {
+            for (i = 0; i != len; i++) {
                 p = data[i][k];
                 data[i][k] = data[i][is[k]];
                 data[i][is[k]] = p;
@@ -100,4 +145,20 @@ int Matrix::doInversion()
         }
     }
     return 0;
+}
+
+/**
+ * 输出矩阵的内容
+ * @author piratf
+ */
+void Matrix::printData() {
+    std::cout << "===========Printing data of Matrix===========" << std::endl;
+    for (auto &row : data) {
+        for (double dValue : row) {
+            printf("%+.8lf ", dValue);
+        }
+        std::cout << std::endl;
+    }
+    std::cout << std::endl;
+    std::cout << "==================Print End==================" << std::endl;
 }

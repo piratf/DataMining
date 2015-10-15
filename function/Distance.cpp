@@ -36,7 +36,7 @@ double Distance::getAverageNum(const std::vector<double> &dvec) {
  * @param  rhs 向量2
  * @return     马氏距离的值 double
  */
-double getMahalanobisDistance(const std::vector<double> &lhs, const std::vector<double> &rhs) {
+double Distance::getMahalanobisDistance(const std::vector<double> &lhs, const std::vector<double> &rhs) {
     int lsize = lhs.size(), rsize = rhs.size();
     if (lsize != rsize) {
         std::cerr << "getMahalanobisDistance -> Argument have different size!" << std::endl;
@@ -46,16 +46,12 @@ double getMahalanobisDistance(const std::vector<double> &lhs, const std::vector<
     double lavg = Distance::getAverageNum(lhs), ravg = Distance::getAverageNum(rhs);
     // 暂存协方差值, 协方差和
     double cov = 0, covSum = 0;
-    Matrix mat(lsize, rsize);
-    // 获得协方差矩阵
-    int r = 0, l = 0;
-    for (size_t i = 0; i < lhs.size(); ++i) {
-        for (size_t j = 0; j < rhs.size(); ++j) {
-            mat.data[i][j] = (lhs[i] - lavg) * (rhs[j] - ravg);
-        }
-    }
+    // Matrix input(std::vector<std::vector<double> >{lhs, rhs});
+    Matrix mat = Matrix::getCovarianceMatrixOfTwoVector(lhs, rhs);
+    mat.printData();
     // 获得矩阵的转置
-    mat = mat.getTransposition();
+    mat.doInversion();
+    mat.printData();
     
     return 0;
 }
