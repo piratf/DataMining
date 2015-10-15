@@ -5,14 +5,43 @@
 #include "Distance.h"
 
 /**
+ * 建立一个n行的空矩阵
+ */
+Matrix::Matrix(int _x) {
+    std::vector< std::vector<double> > temp(_x);
+    data = temp;
+}
+
+/**
+ * 通过矩阵的行列数构造空矩阵
+ */
+Matrix::Matrix(int _x, int _y) {
+    std::vector< std::vector<double> > temp(_x, std::vector<double>(_y));
+    data = temp;
+}
+
+/**
+ * 矩阵深拷贝构造函数，调用了vector的拷贝方法
+ */
+Matrix::Matrix(std::vector<std::vector<double> > dvec) {
+    data = dvec;
+}
+
+/**
  * 获得矩阵的转置
  * @author piratf
  * @return 原矩阵的转置矩阵
  */
 Matrix Matrix::getTransposition() {
-    Matrix tran(data[0].size(), data.size());
-    for (int i = 0; i < data.size(); ++i) {
-        for (int j = 0; j < data.size(); ++j) {
+    decltype(data.size()) sizeRow = data.size();
+    if (sizeRow == 0) {
+        std::cerr << "error** Matrix::getTransposition -> empty Matrix!" << std::endl;
+    }
+    decltype(data.size()) sizeCol = data[0].size();
+
+    Matrix tran(sizeCol, sizeRow);
+    for (int i = 0; i < sizeRow; ++i) {
+        for (int j = 0; j < sizeCol; ++j) {
             tran.data[j][i] = data[i][j];
         }
     }
@@ -36,7 +65,7 @@ double Matrix::vectorDotProduct(const std::vector<double> lhs, std::vector<doubl
 }
 
 /**
- * 获得两个向量的协方差矩阵
+ * 获得两个样本的协方差矩阵
  * @author piratf
  * @return 一个新的协方差矩阵
  */
@@ -61,29 +90,31 @@ Matrix Matrix::getCovarianceMatrixOfTwoVector(const std::vector<double> &lhs, co
 }
 
 /**
- * 获得一个矩阵的协方差矩阵
- * 参数矩阵中的各向量需按行排列
+ * 获得样本矩阵的协方差矩阵
+ * 参数矩阵中的各样本需按行排列
  * @author piratf
  * @return 一个新的协方差矩阵
  */
-Matrix Matrix::getCovarianceMatrix(const std::vector< std::vector<double> > &mat) {
-    using vecSizeT = decltype(mat.size());
-    const vecSizeT sizeRow = mat.size();
+Matrix Matrix::getCovarianceMatrix(const std::vector< std::vector<double> > &input) {
+    Matrix mat(input);
+    mat = mat.getTransposition();
+    using vecSizeT = decltype(mat.data.size());
+    const vecSizeT sizeRow = mat.data.size();
     if (sizeRow == 0) {
-        std::cerr << "getCovarianceMatrix -> empty Matrix argument!" << std::endl;
+        std::cerr << "error** Matrix::getCovarianceMatrix -> empty Matrix argument!" << std::endl;
         return Matrix();
     }
-    const vecSizeT sizeCol = mat[0].size();
+    const vecSizeT sizeCol = mat.data[0].size();
     std::vector<double> avgVec;
     // 对于每一行求其均值
-    for (auto &row : mat) {
+    for (auto &row : mat.data) {
         avgVec.push_back(Distance::getAverageNum(row));
     }
     // 获得协方差矩阵参数
     Matrix temp(sizeRow, sizeCol);
     for (vecSizeT i = 0; i != sizeRow; ++i) {
         for (vecSizeT j = 0; j != sizeCol; ++j) {
-            temp.data[i][j] = mat[i][j] - avgVec[i];
+            temp.data[i][j] = mat.data[i][j] - avgVec[i];
         }
     }
     // 获得协方差矩阵
@@ -94,6 +125,164 @@ Matrix Matrix::getCovarianceMatrix(const std::vector< std::vector<double> > &mat
         }
     }
     return cov;
+}
+
+/**
+ * 矩阵的LU分解
+ * 输入一个正方形矩阵
+ * @author piratf
+ * @return vector<Matrix>，0是L矩阵，1是U矩阵, 如果出错返回空vector
+ */
+std::vector<Matrix> Matrix::luDecomposition() {
+    if (data.size() == 0) {
+        std::cerr << "error** Matrix::luDecomposition -> empty Matrix." << std::endl;
+        return std::vector<Matrix>();
+    }
+    if (data.size() != data[0].size()) {
+        std::cerr << "error** Matrix::luDecomposition -> rows and columns not equal." << std::endl;
+        return std::vector<Matrix>();
+    }
+
+    using vecSizeT = decltype(data.size());
+    double tmp = 0;
+    vecSizeT s = data.size();                //矩阵的阶数
+    vecSizeT n = s * s;                //矩阵内总数据个数
+
+    Matrix L(s, s);
+    Matrix U(s, s);
+
+    for (vecSizeT i = 0; i != s; i++) {
+        for (vecSizeT j = 0; j != s; j++) {
+            if (i == j)
+                L.data[i][j] = 1;
+            if (i < j)
+                L.data[i][j] = 0;
+            if (i > j)
+                U.data[i][j] = 0;
+
+            U.data[0][j] = data[0][j];
+            L.data[i][0] = data[i][0] / U.data[0][0];
+        }
+    }
+
+    for (vecSizeT k = 1; k != s; k++) {
+        for (vecSizeT j = k; j != s; j++) {
+            tmp = 0;
+            for (vecSizeT m = 0; m < k; m++) {
+                tmp += L.data[k][m] * U.data[m][j];
+            }
+            U.data[k][j] = data[k][j] - tmp;
+        }
+        for (vecSizeT i = k + 1; i != s; i++) {
+            tmp = 0;
+            for (vecSizeT m = 0; m != k; m++) {
+                tmp += L.data[i][m] * U.data[m][k];
+            }
+            L.data[i][k] = ( data[i][k] - tmp ) / U.data[k][k];
+        }
+    }
+
+    //这里就得到L和U矩阵的值了
+    return std::vector<Matrix> {L, U};
+}
+
+/**
+ * 获得矩阵位置(x, y)元素的余子式
+ * @author piratf
+ * @param  x 元素行坐标
+ * @param  y 元素列坐标
+ * @return   Matrix: 余子式
+ */
+Matrix Matrix::left(const unsigned x, const unsigned y) {
+    std::cout << x << " : " << y << std::endl;
+    using vecSizeT = decltype(data.size());
+    vecSizeT rowSize = data.size();
+    if (rowSize == 0) {
+        return Matrix();
+    }
+    vecSizeT colSize = data[0].size();
+
+    if ((x >= rowSize) || (y >= colSize)) {
+        std::cerr << "error** Matrix::left -> input out of range." << std::endl;
+        return Matrix();
+    }
+
+    Matrix leftMatrix(rowSize, colSize);
+    bool testx = false;
+    bool testy = false;
+    for (vecSizeT i = 0; i != rowSize - 1; i++) {
+        testy = 0;
+        for (vecSizeT j = 0; j != colSize - 1; j++) {
+            if (i == x)
+                testx = true;
+            if (j == y)
+                testy = true;
+            if ((!testx) && (!testy))
+                leftMatrix.data[i][j] = data[i][j];
+            else if (testx && (!testy))
+                leftMatrix.data[i][j] = data[i + 1][j];
+            else if ((!testx) && testy)
+                leftMatrix.data[i][j] = data[i][j + 1];
+            else
+                leftMatrix.data[i][j] = data[i + 1][j + 1];
+        }
+    }
+    return leftMatrix;
+}
+
+/**
+ * 判断是否是空矩阵
+ * @author piratf
+ * @return 1 : 0 -> 空矩阵 : 不是空矩阵
+ */
+bool Matrix::empty() {
+    return data.size();
+}
+
+/**
+ * 判断矩阵是否是方阵
+ * @author piratf
+ * @return 1 : 0 -> 方阵 : 不是方阵
+ */
+bool Matrix::isSquare() {
+    if (empty()) {
+        return 0;
+    }
+    return data.size() == data[0].size();
+}
+
+/**
+ * 求矩阵行列式
+ * @author piratf
+ * @return double: 行列式的值
+ */
+double Matrix::det() {
+    if (isSquare()) {
+        std::cerr << "error** Matrix::det -> not a square!" << std::endl;
+        return -1;
+    }
+    if (data.size() == 1) {
+        return data[0][0];
+    }
+    else if (data.size() == 2) {
+        return (data[0][0] * data[1][1] - data[0][1] * data[1][0]);
+    }
+    double num = 0;
+    int a = 1;
+    for (int i = 0; i != data.size(); i++) {
+        num = num + a * data[0][i] * left(0, i).det();  //按第0行展开
+        a = -a;
+    }
+    return num;
+}
+
+/**
+ * 判断当前矩阵是否是奇异矩阵
+ * @author piratf
+ * @return 1: 是奇异矩阵 0: 不是奇异矩阵
+ */
+bool Matrix::isSingular() {
+    return det() ? false : true;
 }
 
 /**
@@ -125,7 +314,7 @@ int Matrix::doInversion()
             }
         }
         if ( dMinValue - 0.0 < 1e-8 ) {
-            std::cerr << "err**not inv" << std::endl;
+            std::cerr << "error** Matrix::doInversion -> empty Matrix!" << std::endl;
             return -1;
         }
         if (is[k] != k) {
@@ -195,6 +384,5 @@ void Matrix::printData() {
         }
         std::cout << std::endl;
     }
-    std::cout << std::endl;
-    std::cout << "==================Print End==================" << std::endl;
+    std::cout << "==================Print End==================" << std::endl << std::endl;;
 }

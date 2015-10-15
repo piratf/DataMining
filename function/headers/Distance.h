@@ -5,7 +5,6 @@
 #include <vector>
 #include "Node.h"
 #include "Group.h"
-#include "Matrix.h"
 
 /**
  * 一些计算距离的静态函数

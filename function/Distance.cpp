@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Distance.h"
+#include "Matrix.h"
 
 /**
 * 欧氏距离平方
@@ -30,7 +31,7 @@ double Distance::getAverageNum(const std::vector<double> &dvec) {
 }
 
 /**
- * 获取两个向量的马氏距离
+ * 获取两个样本的马氏距离
  * @author piratf
  * @param  lhs 向量1
  * @param  rhs 向量2
@@ -42,11 +43,32 @@ double Distance::getMahalanobisDistance(const std::vector<double> &lhs, const st
         std::cerr << "getMahalanobisDistance -> Argument have different size!" << std::endl;
         return -1;
     }
-    // Matrix input(std::vector<std::vector<double> >{lhs, rhs});
     // 获取两向量的协方差矩阵
     Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> >{lhs, rhs});
+    mat.printData();
+    if (mat.isSingular()) {
+        std::cout << "warning* Distance::getMahalanobisDistance -> The Matrix is Singular, Now will return QuadraticEuclideanDistance" << std::endl;
+        return 0;
+    }
     // 获得协方差矩阵的转置
     mat.doInversion();
-    
+    mat.printData();
+
+    // 获得两向量的差
+    Matrix diff(1);
+    for (decltype(lhs.size()) i = 0; i != lhs.size(); ++i) {
+        diff.data[0].push_back(lhs[i] - rhs[i]);
+    }
+    diff.printData();
+
+    diff.getTransposition().printData();
+
+    // 本来是需要转置才能用矩阵乘法
+    // 这里直接将两个向量的各值相乘，见谅
+    double product = 0.0;
+    for (decltype(lhs.size()) i = 0; i != lhs.size(); ++i) {
+        product += lhs[i] * rhs[i];
+    }
+
     return 0;
 }
