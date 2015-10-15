@@ -1,7 +1,7 @@
 #include "general.h"
-#include "structs.h"
 #include "kmeans.h"
 #include "kmedoids.h"
+#include <iostream>
 
 int main() {
 #ifndef ONLINE_JUDGE

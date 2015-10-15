@@ -1,4 +1,3 @@
-#include "Structs.h"
 #include "KMeans.h"
 
 

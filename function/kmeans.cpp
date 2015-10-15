@@ -6,7 +6,6 @@
 #include <numeric>
 #include <cstdlib>
 #include <ctime>
-#include "structs.h"
 #include "general.h"
 #include "kmeans.h"
 

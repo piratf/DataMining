@@ -1,7 +1,10 @@
 #ifndef GENERAL_H_
 #define GENERAL_H_
+
 #include <vector>
-#include "structs.h"
+#include "Node.h"
+#include "Distance.h"
+#include "Group.h"
 
 // INF of Double and Int
 const double DINF = 1e12;
