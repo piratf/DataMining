@@ -61,6 +61,42 @@ Matrix Matrix::getCovarianceMatrixOfTwoVector(const std::vector<double> &lhs, co
 }
 
 /**
+ * 获得一个矩阵的协方差矩阵
+ * 参数矩阵中的各向量需按行排列
+ * @author piratf
+ * @return 一个新的协方差矩阵
+ */
+Matrix Matrix::getCovarianceMatrix(const std::vector< std::vector<double> > &mat) {
+    using vecSizeT = decltype(mat.size());
+    const vecSizeT sizeRow = mat.size();
+    if (sizeRow == 0) {
+        std::cerr << "getCovarianceMatrix -> empty Matrix argument!" << std::endl;
+        return Matrix();
+    }
+    const vecSizeT sizeCol = mat[0].size();
+    std::vector<double> avgVec;
+    // 对于每一行求其均值
+    for (auto &row : mat) {
+        avgVec.push_back(Distance::getAverageNum(row));
+    }
+    // 获得协方差矩阵参数
+    Matrix temp(sizeRow, sizeCol);
+    for (vecSizeT i = 0; i != sizeRow; ++i) {
+        for (vecSizeT j = 0; j != sizeCol; ++j) {
+            temp.data[i][j] = mat[i][j] - avgVec[i];
+        }
+    }
+    // 获得协方差矩阵
+    Matrix cov(sizeRow, sizeRow);
+    for (vecSizeT i = 0; i != sizeRow; ++i) {
+        for (vecSizeT j = 0; j != sizeRow; ++j) {
+            cov.data[i][j] = Matrix::vectorDotProduct(temp.data[i], temp.data[j]) / (sizeCol - 1);
+        }
+    }
+    return cov;
+}
+
+/**
  * 将矩阵的内容变成矩阵的逆
  * @author piratf
  * @param  data 二位数据集
@@ -68,7 +104,7 @@ Matrix Matrix::getCovarianceMatrixOfTwoVector(const std::vector<double> &lhs, co
  * @return   [description]
  */
 int Matrix::doInversion()
-{   
+{
     // double *is = new double[len];
     // double *js = new double[len];
     auto len = data.size();

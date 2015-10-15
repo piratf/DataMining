@@ -42,16 +42,11 @@ double Distance::getMahalanobisDistance(const std::vector<double> &lhs, const st
         std::cerr << "getMahalanobisDistance -> Argument have different size!" << std::endl;
         return -1;
     }
-    // 获取两个向量的平均值
-    double lavg = Distance::getAverageNum(lhs), ravg = Distance::getAverageNum(rhs);
-    // 暂存协方差值, 协方差和
-    double cov = 0, covSum = 0;
     // Matrix input(std::vector<std::vector<double> >{lhs, rhs});
-    Matrix mat = Matrix::getCovarianceMatrixOfTwoVector(lhs, rhs);
-    mat.printData();
-    // 获得矩阵的转置
+    // 获取两向量的协方差矩阵
+    Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> >{lhs, rhs});
+    // 获得协方差矩阵的转置
     mat.doInversion();
-    mat.printData();
     
     return 0;
 }

@@ -6,13 +6,21 @@ class Matrix
 public:
     std::vector< std::vector<double> > data;
 
-    Matrix();
+    Matrix() {
 
+    }
+
+    /**
+     * 通过矩阵的行列数构造空矩阵
+     */
     Matrix(int _x, int _y) {
         std::vector< std::vector<double> > temp(_x, std::vector<double>(_y));
         data = temp;
     }
 
+    /**
+     * 矩阵深拷贝构造函数，调用了vector的拷贝方法
+     */
     Matrix(std::vector<std::vector<double> > dvec) {
         data = dvec;
     }
@@ -34,15 +42,22 @@ public:
     static Matrix getCovarianceMatrixOfTwoVector(const std::vector<double> &lhs, const std::vector<double> &rhs);
 
     /**
-    * 获得矩阵的转置
+    * 获得一个矩阵的协方差矩阵
     * @author piratf
-    * @return 原矩阵的转置矩阵
+    * @return 一个新的协方差矩阵
     */
-    Matrix getTransposition();
+    static Matrix getCovarianceMatrix(const std::vector< std::vector<double> > &mat);
 
-    int doInversion();
+        /**
+        * 获得矩阵的转置
+        * @author piratf
+        * @return 原矩阵的转置矩阵
+        */
+        Matrix getTransposition();
 
-    void printData();
-};
+        int doInversion();
+
+        void printData();
+    };
 
 #endif
