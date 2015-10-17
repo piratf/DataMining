@@ -2,7 +2,39 @@
 #include "kmeans.h"
 #include "kmedoids.h"
 #include "Distance.h"
+#include "Matrix.h"
+#include <vector>
 #include <iostream>
+
+using vecSizeT = std::vector<double>::size_type;
+
+void inline unitTest(std::vector<Node> &test) {
+    // 数据归一化
+    normaliztion(test);
+
+    // 输出读入的数据
+    puts("Print Input Data:");
+    puts("=====================================");
+
+    for (vecSizeT i = 0; i != test.size(); ++i) {
+        test[i].display();
+    }
+    puts("=====================================\n");
+
+    const unsigned k = 3;
+
+    // KMeans(test, k);
+    KMeans(test, k, true);
+    // KMedoids(test, k);
+}
+
+void inline matrixTest(std::vector<Node> &test) {
+    Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> > {test[0].attribute, test[1].attribute});
+    mat.printData();
+    std::vector<Matrix> lu = mat.luDecomposition();
+    lu[0].printData();
+    lu[1].printData();
+}
 
 int main() {
 #ifndef ONLINE_JUDGE
@@ -25,24 +57,8 @@ int main() {
             }
         }
 
-        // Distance::getMahalanobisDistance(test[0].attribute, test[1].attribute);
-
-        normaliztion(test);
-
-        // 输出读入的数据
-        puts("Print Input Data:");
-        puts("=====================================");
-
-        for (int i = 0; i < n; ++i) {
-            test[i].display();
-        }
-        puts("=====================================\n");
-
-        const unsigned k = 3;
-
-        // KMeans(test, k);
-        KMeans(test, k, true);
-        // KMedoids(test, k);
+        matrixTest(test);
+        // unitTest(test);
     }
     return 0;
 }

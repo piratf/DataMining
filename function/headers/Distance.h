@@ -21,6 +21,12 @@ public:
     */
     static double QuadraticEuclideanDistance(const Node& lhs, const Node& rhs);
 
+    /**
+     * 获得向量的平均值
+     * @author piratf
+     * @param  dvec 参数向量
+     * @return      double: 向量平均值
+     */
     static double getAverageNum(const std::vector<double> &dvec);
 
     /**

@@ -22,6 +22,12 @@ double Distance::QuadraticEuclideanDistance(const Node& lhs, const Node& rhs) {
     return quadraticSum;
 }
 
+/**
+ * 获得向量的平均值
+ * @author piratf
+ * @param  dvec 参数向量
+ * @return      double: 向量平均值
+ */
 double Distance::getAverageNum(const std::vector<double> &dvec) {
     double sum = 0;
     for (double dn : dvec) {
@@ -44,8 +50,7 @@ double Distance::getMahalanobisDistance(const std::vector<double> &lhs, const st
         return -1;
     }
     // 获取两向量的协方差矩阵
-    Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> >{lhs, rhs});
-    mat.printData();
+    Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> > {lhs, rhs});
     if (mat.isSingular()) {
         std::cout << "warning* Distance::getMahalanobisDistance -> The Matrix is Singular, Now will return QuadraticEuclideanDistance" << std::endl;
         return 0;

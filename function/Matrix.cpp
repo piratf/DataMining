@@ -129,7 +129,7 @@ Matrix Matrix::getCovarianceMatrix(const std::vector< std::vector<double> > &inp
 
 /**
  * 矩阵的LU分解
- * 输入一个正方形矩阵
+ * 结果有误差，正在改进
  * @author piratf
  * @return vector<Matrix>，0是L矩阵，1是U矩阵, 如果出错返回空vector
  */
@@ -138,7 +138,7 @@ std::vector<Matrix> Matrix::luDecomposition() {
         std::cerr << "error** Matrix::luDecomposition -> empty Matrix." << std::endl;
         return std::vector<Matrix>();
     }
-    if (data.size() != data[0].size()) {
+    if (!isSquare()) {
         std::cerr << "error** Matrix::luDecomposition -> rows and columns not equal." << std::endl;
         return std::vector<Matrix>();
     }
@@ -182,7 +182,6 @@ std::vector<Matrix> Matrix::luDecomposition() {
         }
     }
 
-    //这里就得到L和U矩阵的值了
     return std::vector<Matrix> {L, U};
 }
 
@@ -257,23 +256,8 @@ bool Matrix::isSquare() {
  * @return double: 行列式的值
  */
 double Matrix::det() {
-    if (isSquare()) {
-        std::cerr << "error** Matrix::det -> not a square!" << std::endl;
-        return -1;
-    }
-    if (data.size() == 1) {
-        return data[0][0];
-    }
-    else if (data.size() == 2) {
-        return (data[0][0] * data[1][1] - data[0][1] * data[1][0]);
-    }
-    double num = 0;
-    int a = 1;
-    for (int i = 0; i != data.size(); i++) {
-        num = num + a * data[0][i] * left(0, i).det();  //按第0行展开
-        a = -a;
-    }
-    return num;
+    // 通过LU分解求矩阵的行列式
+    return 0;
 }
 
 /**
@@ -282,7 +266,9 @@ double Matrix::det() {
  * @return 1: 是奇异矩阵 0: 不是奇异矩阵
  */
 bool Matrix::isSingular() {
-    return det() ? false : true;
+    std::vector<Matrix> v = luDecomposition();
+    return false;
+    // return det() ? false : true;
 }
 
 /**
