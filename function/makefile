@@ -4,8 +4,8 @@ VPATH=headers
 CC = g++
 # override CFLAGS += $(patsubst %,-I%,$(subst :, ,$(VPATH)))
 # cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH)))
-cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11
-# cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11 -pedantic -Wall
+# cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11
+cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11 -pedantic -Wall
 
 .PHONY: all
 all: Node.o Group.o Distance.o general.o kmeans.o kmedoids.o Matrix.o

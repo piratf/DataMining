@@ -34,12 +34,10 @@ void inline matrixTest(std::vector<Node> &test) {
     std::vector<Matrix> lu = mat.luDecomposition();
     lu[0].printData();
     lu[1].printData();
-}
+}   // unfinished, could cause error
 
 int main() {
-#ifndef ONLINE_JUDGE
     freopen(".\\data\\iris.txt", "r", stdin);
-#endif
     int n, m;
     while (~scanf("%d %d", &n, &m)) {
         if (n == 0) {
@@ -57,8 +55,7 @@ int main() {
             }
         }
 
-        matrixTest(test);
-        // unitTest(test);
+        unitTest(test);
     }
     return 0;
 }

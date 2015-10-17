@@ -37,11 +37,12 @@ Matrix Matrix::getTransposition() {
     if (sizeRow == 0) {
         std::cerr << "error** Matrix::getTransposition -> empty Matrix!" << std::endl;
     }
-    decltype(data.size()) sizeCol = data[0].size();
+    using vecSizeT = decltype(data.size());
+    vecSizeT sizeCol = data[0].size();
 
     Matrix tran(sizeCol, sizeRow);
-    for (int i = 0; i < sizeRow; ++i) {
-        for (int j = 0; j < sizeCol; ++j) {
+    for (vecSizeT i = 0; i < sizeRow; ++i) {
+        for (vecSizeT j = 0; j < sizeCol; ++j) {
             tran.data[j][i] = data[i][j];
         }
     }
@@ -146,7 +147,7 @@ std::vector<Matrix> Matrix::luDecomposition() {
     using vecSizeT = decltype(data.size());
     double tmp = 0;
     vecSizeT s = data.size();                //矩阵的阶数
-    vecSizeT n = s * s;                //矩阵内总数据个数
+    // vecSizeT n = s * s;                //矩阵内总数据个数
 
     Matrix L(s, s);
     Matrix U(s, s);
@@ -285,7 +286,7 @@ int Matrix::doInversion()
     auto len = data.size();
     std::vector<double> is(len);
     std::vector<double> js(len);
-    int i, j, k;
+    decltype(data.size()) i, j, k;
     double dMinValue, p;
     for ( k = 0; k != len; k++) {
         dMinValue = 0.0;
@@ -339,7 +340,7 @@ int Matrix::doInversion()
             }
         }
     }
-    for ( k = len - 1; k != -1; k--) {
+    for ( k = len - 1; k <= (unsigned)-1; k--) {
         if (js[k] != k) {
             for (j = 0; j <= len - 1; j++) {
                 p = data[k][j];
