@@ -13,19 +13,19 @@ const int IINF = 0x3f3f3f3f;
 /**
  * Kmeans++ 版本设置初始点簇，有较低概率选择较差的点
  */
-std::vector<Group> buildInitialPointRandomly(unsigned k, Group &v);
+std::vector<Group> buildInitialPointRandomly(unsigned k, Group v);
 
 /**
  * Kmeans 版本设置初始点簇
  */
-std::vector<Group> buildInitialPoint(unsigned k, Group &v);
+std::vector<Group> buildInitialPoint(unsigned k, Group v);
 
 bool cmpByDensity(const Node &lhs, const Node &rhs);
 
 /**
  * 根据密度建立初始点
  */
-std::vector<Group> buildInitialPointDensity(unsigned k, Group &v);
+std::vector<Group> buildInitialPointDensity(unsigned k, Group v);
 
 /**
  * 数据归一化
@@ -42,6 +42,19 @@ void normaliztion(Group &v);
  */
 double evaluation(std::vector<Group>& centroid, bool display = false);
 
+/**
+ * 打印聚类数据的各分量均值信息
+ * @author piratf
+ * @param  centroid 聚类数据集
+ */
+void evaluateAvg(std::vector<Group>& centroid);
+
+/**
+ * 打印聚类数据的各分量方差
+ * @author piratf
+ * @param  centroid [description]
+ */
+void evaluateVariance(std::vector<Group>& centroid);
 
 /**
  * 获取用于测试的SSE值

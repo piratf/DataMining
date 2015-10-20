@@ -5,12 +5,13 @@
 #include "Matrix.h"
 #include <vector>
 #include <iostream>
+#include <ctime>
 
 using vecSizeT = std::vector<double>::size_type;
 
 void inline unitTest(Group &test) {
     // 数据归一化
-    normaliztion(test);
+    // normaliztion(test);
 
     // 输出读入的数据
     puts("Print Input Data:");
@@ -18,18 +19,41 @@ void inline unitTest(Group &test) {
     // test.display();
     puts("=====================================\n");
 
+    // k 值
     const unsigned k = 3;
 
     /** 准备测试数据 */
     // KMeans++
     // std::vector<Group> centroid = buildInitialPointRandomly(k, test);
     // Kmeans + Density initialize
-    std::vector<Group> centroid = buildInitialPointDensity(k, test);
+    // std::vector<Group> centroid = buildInitialPointDensity(k, test);
     // KMeans
     // std::vector<Group> centroid = buildInitialPoint(k, test);
 
-    // KMeans(test, k, centroid);
-    KMedoids(test, k, centroid);
+
+    // 重复运行测试
+    std::vector<Group> result;
+    std::vector<double> avg(k);
+    double SSE = 0;
+    time_t start = std::clock();
+    // 重复实验的次数
+    const double TIMES = 1000;
+    for (unsigned i = 0; i < TIMES; ++i) {
+        result = KMeans(test, k, buildInitialPoint(k, test), false);
+        for (unsigned j = 0; j < result.size(); ++j) {
+            avg[j] += result[j].nodes.size();
+            SSE += evaluation(result, false);
+        }
+    }
+    time_t end = std::clock();
+    printf("the running time is : %f\n", double(end - start) / CLOCKS_PER_SEC);
+
+    for (unsigned j = 0; j < k; ++j) {
+        printf("average size of cluster %d is: %lf\n", j + 1, avg[j] / TIMES);
+    }
+    printf("SSE = %lf\n", SSE / TIMES);
+
+    // KMedoids(test, k, centroid);
 }
 
 void inline matrixTest(Group &test) {

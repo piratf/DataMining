@@ -44,12 +44,32 @@ public:
      * @author piratf
      * @return 当前簇的欧氏距离平方和
      */
-    double getEuclideanDistance();
+    double getSumOfEuclideanDistance();
 
     /**
-     * 获取当前簇的欧氏距离平方和
+     * 获取当前簇的欧氏距离平方最大值
      * @author piratf
-     * @return 当前簇的欧氏距离平方和
+     * @return 当前簇的欧氏距离平方最大值
+     */
+    double getMaxOfEuclideanDistance();
+
+    /**
+     * 打印各分量的均值
+     * @author piratf
+     */
+    std::vector<double> componentAverage(bool display = true);
+
+    /**
+     * 打印各分量方差
+     * @author piratf
+     */
+    std::vector<double> componentVariance(bool display = true);
+
+    /**
+     * 返回当前簇到特定点的欧式距离平方和
+     * @author piratf
+     * @param  otherCenter 特定的店
+     * @return             当前簇到特定点的欧式距离平方和
      */
     double getEuclideanDistanceWithOtherCenter(const Node& otherCenter);
 

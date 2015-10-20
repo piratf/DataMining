@@ -50,7 +50,8 @@ void Node::operator = (const Node& other) {
  */
 void Node::display(bool detail) {
     unsigned len = attribute.size();
-    printf("id = %d\n", id);
+    printf("%d ", id);
+    // printf("id = %d\n", id);
     if (detail) {
         for (unsigned i = 0; i < len; ++i) {
             printf("%lf%c", attribute[i], i == len - 1 ? '\n' : ' ');

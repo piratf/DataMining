@@ -6,26 +6,21 @@
 #include "general.h"
 #include "k-mediods.h"
 
-std::vector<Group> KMedoids(Group& v, unsigned k, std::vector<Group> &centroid) {
-    const char* name = "KMedoids";
-    printf("Start %s:\n", name);
+std::vector<Group> KMediods(Group& v, unsigned k, std::vector<Group> centroid, bool display) {
+    if (display) {
+        puts("Start KMediods:");
+        puts("=====================================");
+    }
     std::vector<Node> preCenters(k);
     unsigned testlen = v.nodes.size();
 
-    // std::vector<Group> centroid(k);
-    // for (int i = 0; i < k; ++i) {
-    //     centroid[i].nodes.push_back(v[i]);
-    //     centroid[i].center = v[i];
-    //     preCenters.push_back(centroid[i].center);
-    // }   // 初始化各簇，设置质心
-
-    // std::vector<Group> centroid = buildInitialPoint(k, v);
-
-    printf("Print initial center id:\n");
-    for (unsigned i = 0; i < k; ++i) {
-        printf("%d\n", centroid[i].center.id);
+    if (display) {
+        printf("Print initial center id:\n");
+        for (unsigned i = 0; i < k; ++i) {
+            printf("%d\n", centroid[i].center.id);
+        }
+        puts("=====================================");
     }
-    puts("=====================================");
 
     double dis = 0, mdis = 0, mid = 0;
 
@@ -65,7 +60,7 @@ std::vector<Group> KMedoids(Group& v, unsigned k, std::vector<Group> &centroid) 
                 }
                 ORandom = centroid[i].nodes[rand() % (clen)];
             }
-            curSSE = centroid[i].getEuclideanDistance();
+            curSSE = centroid[i].getSumOfEuclideanDistance();
             testSSE = centroid[i].getEuclideanDistanceWithOtherCenter(ORandom);
             if (testSSE < curSSE) {
                 curSSE = testSSE;
@@ -76,9 +71,11 @@ std::vector<Group> KMedoids(Group& v, unsigned k, std::vector<Group> &centroid) 
         // printf("%lf : %lf\n", sumSSE, preSSE);
     }
 
-    evaluation(centroid, true);
-    printCentroidInfo(centroid);
-    printf("End Of %s.\n", name);
-    puts("=====================================\n");
+    if (display) {
+        printCentroidInfo(centroid, true);
+        evaluation(centroid, true);
+        puts("End Of KMediods:");
+        puts("=====================================\n");
+    }
     return centroid;
 }
