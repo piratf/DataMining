@@ -1,6 +1,6 @@
 #include "general.h"
 #include "kmeans.h"
-#include "kmedoids.h"
+#include "k-mediods.h"
 #include "Distance.h"
 #include "Matrix.h"
 #include <vector>
@@ -22,14 +22,14 @@ void inline unitTest(Group &test) {
 
     /** 准备测试数据 */
     // KMeans++
-    std::vector<Group> centroid = buildInitialPointRandomly(k, test);
+    // std::vector<Group> centroid = buildInitialPointRandomly(k, test);
     // Kmeans + Density initialize
-    // std::vector<Group> centroid = buildInitialPointDensity(k, test);
+    std::vector<Group> centroid = buildInitialPointDensity(k, test);
     // KMeans
     // std::vector<Group> centroid = buildInitialPoint(k, test);
 
-    KMeans(test, k, centroid);
-    // KMedoids(test, k);
+    // KMeans(test, k, centroid);
+    KMedoids(test, k, centroid);
 }
 
 void inline matrixTest(Group &test) {

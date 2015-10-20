@@ -19,13 +19,28 @@ Algorithm can be used:
 > + Kmeans
 
     declaration:
-        std::vector<Group> KMeans(std::vector<Node>& v, unsigned k, bool plus == false)
+        std::vector<Group> KMeans(Group &v, unsigned k, std::vector<Group> &centroid);
+
+There are three different type optimization about initial points.
+
+    > 1. std::vector<Group> centroid = buildInitialPointRandomly(k, test);
+
+Randomly select initial points, but let the points which has longer distance to current center has a greater possibility
+
+    > 2. std::vector<Group> centroid = buildInitialPointDensity(k, test);
+
+Using buildInitialPointRandomly, but first screen the point set and removal outlier.
+
+    > 3. std::vector<Group> centroid = buildInitialPoint(k, test);
+
+Default initial points
+    
 
 > + K-mediods
 
-    A algorithm use 
+Using existing node to represent next center point.
 
     declaration:
-        std::vector<Group> KMedoids(std::vector<Node>& v, unsigned k, 
-            bool plus = false);
-        // send true to plus to call randomized optimization on kmedoids
+        std::vector<Group> KMedoids(Group& v, unsigned k, std::vector<Group> &centroid);
+
+Three different type optimization on `KMeans` could use at here too.

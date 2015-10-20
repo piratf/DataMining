@@ -8,7 +8,7 @@ CC = g++
 cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11 -pedantic -Wall
 
 .PHONY: all
-all: Node.o Group.o Distance.o general.o kmeans.o kmedoids.o Matrix.o
+all: Node.o Group.o Distance.o general.o kmeans.o k-mediods.o Matrix.o
 	ar -cr libFunctions.a $(foreach n, $(targets), $(n).o)
 
 general.o: $(VPATH)/general.h $(VPATH)/Node.h $(VPATH)/Group.h $(VPATH)/Distance.h general.cpp
