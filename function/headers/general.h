@@ -13,12 +13,19 @@ const int IINF = 0x3f3f3f3f;
 /**
  * Kmeans++ 版本设置初始点簇，有较低概率选择较差的点
  */
-std::vector<Group> buildInitialPointPlus(unsigned k, Group &v);
+std::vector<Group> buildInitialPointRandomly(unsigned k, Group &v);
 
 /**
  * Kmeans 版本设置初始点簇
  */
 std::vector<Group> buildInitialPoint(unsigned k, Group &v);
+
+bool cmpByDensity(const Node &lhs, const Node &rhs);
+
+/**
+ * 根据密度建立初始点
+ */
+std::vector<Group> buildInitialPointDensity(unsigned k, Group &v);
 
 /**
  * 数据归一化
@@ -44,5 +51,12 @@ double evaluation(std::vector<Group>& centroid, bool display = false);
  * @return          [description]
  */
 double getSSE(const std::vector<Group>& centroid, const Node& center);
+
+/**
+ * 打印聚类之后的结果信息
+ * @author piratf
+ * @param  centroid [description]
+ */
+void printCentroidInfo(std::vector<Group> &centroid, bool detail = false);
 
 #endif

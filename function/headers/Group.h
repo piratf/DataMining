@@ -57,7 +57,7 @@ public:
      * 打印当前簇的数据
      * @author piratf
      */
-    void printData();
+    void display(bool detail = false);
 
    
 };  // 簇，存储一个簇的对象数组。

@@ -15,17 +15,13 @@ void inline unitTest(Group &test) {
     // 输出读入的数据
     puts("Print Input Data:");
     puts("=====================================");
-
-    /*for (vecSizeT i = 0; i != test.size(); ++i) {
-        test[i].display();
-    }*/
-    test.printData();
+    // test.display();
     puts("=====================================\n");
 
     const unsigned k = 3;
 
     // KMeans(test, k);
-    KMeans(test, k, true);
+    KMeans(test, k, "KMeans++");
     // KMedoids(test, k);
 }
 

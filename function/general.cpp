@@ -18,20 +18,29 @@ double evaluation(std::vector<Group>& centroid, bool display) {
     if (display) {
         printf("evaluation: %lf\n", sum);
         puts("=====================================");
+    }
+    return sum;
+}
 
-        puts("Print the clustering results Data:");
-        puts("=====================================");
-        for (unsigned i = 0; i < len; ++i) {
-            unsigned nlen = centroid[i].nodes.size();
-            printf("Centroid: %d, count: %d\n", i + 1, nlen);
+/**
+ * 打印聚类之后的结果信息
+ * @author piratf
+ * @param  centroid [description]
+ */
+void printCentroidInfo(std::vector<Group> &centroid, bool detail) {
+    puts("Print the clustering results Data:");
+    puts("=====================================");
+    for (unsigned i = 0; i < centroid.size(); ++i) {
+        unsigned nlen = centroid[i].nodes.size();
+        printf("Centroid: %d, count: %d\n", i + 1, nlen);
+        if (detail) {
             puts("=====================================");
             for (unsigned j = 0; j < nlen; ++j) {
                 centroid[i].nodes[j].display();
             }
         }
-        puts("=====================================");
     }
-    return sum;
+    puts("=====================================");
 }
 
 /**
@@ -113,7 +122,7 @@ std::vector<Group> buildInitialPoint(unsigned k, Group &v) {
 /**
  * 让各点到最近中心点距离最大的点概率最大
  */
-std::vector<Group> buildInitialPointPlus(unsigned k, Group &v) {
+std::vector<Group> buildInitialPointRandomly(unsigned k, Group &v) {
     std::vector<Group> centroid(k);
     unsigned len = v.nodes.size();
     srand((unsigned)time(NULL));
@@ -153,5 +162,49 @@ std::vector<Group> buildInitialPointPlus(unsigned k, Group &v) {
         centroid[found].center = v.nodes[cnt];
         found++;
     }
+    return centroid;
+}
+
+bool cmpByDensity(const Node &lhs, const Node &rhs) {
+    return lhs.densityNumber < rhs.densityNumber;
+}
+
+/**
+ * 根据密度建立初始点
+ */
+std::vector<Group> buildInitialPointDensity(unsigned k, Group &v) {
+    std::vector<Group> centroid(k);
+    // unsigned len = v.nodes.size();
+
+    // // 计算密度参数时边界节点数量
+    // const unsigned LIMIT = 5;
+    // // 按照密度参数取多少比例的点
+    // const double FRONT = 1 / 2;
+    // const unsigned END = v.nodes.size() * FRONT;
+
+    // // 对所有点两两之间计算距离
+    // std::vector<std::vector<double> > distanceMatrix;
+    // std::vector<double> densityNumber;
+    // for (unsigned i = 0; i < len; ++i) {
+    //     for (unsigned j = 0; j < len; ++j) {
+    //         distanceMatrix[i][j] = Distance::QuadraticEuclideanDistance(v.nodes[i], v.nodes[j]);
+    //     }
+    // }
+
+    // // 对每个点到其它点的距离排序，获得每个点的密度参数
+    // for (unsigned i = 0; i < len; ++i) {
+    //     std::sort(distanceMatrix[i].begin(), distanceMatrix[i].end());
+    //     v.nodes[i].densityNumber = (distanceMatrix[i][LIMIT]);
+    // }
+
+    // // 按照密度参数排序
+    // std::sort(v.nodes.begin(), v.nodes.end(), cmpByDensity);
+
+    // Group v2;
+    // for (unsigned i = 0; i < END; ++i) {
+    //     v2.nodes.push_back(v.nodes[i]);
+    // }
+
+    // centroid = buildInitialPointRandomly(k, v2);
     return centroid;
 }

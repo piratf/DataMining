@@ -13,7 +13,7 @@ std::vector<Group> KMedoids(Group& v, unsigned k, bool plus) {
     unsigned testlen = v.nodes.size();
 
     std::vector<Group> centroid =
-        plus ? buildInitialPointPlus(k, v) : buildInitialPoint(k, v);
+        plus ? buildInitialPointRandomly(k, v) : buildInitialPoint(k, v);
     // std::vector<Group> centroid(k);
     // for (int i = 0; i < k; ++i) {
     //     centroid[i].nodes.push_back(v[i]);

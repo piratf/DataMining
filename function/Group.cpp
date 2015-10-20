@@ -66,8 +66,8 @@ double Group::getEuclideanDistanceWithOtherCenter(const Node& otherCenter) {
  * 打印当前簇的数据
  * @author piratf
  */
-void Group::printData() {
+void Group::display(bool detail) {
     for (Node& node : nodes) {
-        node.display();
+        node.display(detail);
     }
 }

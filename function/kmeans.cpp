@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cstring>
+#include <string>
 #include <cmath>
 #include <vector>
 #include <iostream>
@@ -9,21 +11,29 @@
 #include "general.h"
 #include "kmeans.h"
 
-std::vector<Group> KMeans(Group &v, unsigned k, bool plus) {
-    const char* name = plus ? "KMeans++" : "KMeans";
-    printf("Start %s:\n", name);
-    puts("=====================================");
 
-    std::vector<Node> preCenters(k);
-    unsigned dataSize = v.nodes.size();
+std::vector<Group> KMeans(Group &v, unsigned k, std::string algorithm) {
+    std::cout << "Start " << algorithm << std::endl;
+    // printf("Start %s:\n", name);
+    puts("=====================================");
 
     // 建立初始的簇中心
     std::vector<Group> centroid =
-        plus ? buildInitialPointPlus(k, v) : buildInitialPoint(k, v);
+        (algorithm == "KMeans++") ? buildInitialPointRandomly(k, v)
+        : buildInitialPoint(k, v);
+
+    // 用于在 checkProcess 中保存上一次运算的中心点，用于计算两次处理的差值，判断是否结束算法
+    std::vector<Group> preCenters(1);
+    unsigned dataSize = v.nodes.size();
+
+    for (unsigned i = 0; i < v.nodes[0].attribute.size(); ++i) {
+        preCenters[0].nodes.push_back(Node());
+    }
 
     printf("Print initial center id:\n");
     for (unsigned i = 0; i < k; ++i) {
-        printf("%d\n", centroid[i].center.id);
+        centroid[i].center.display(false);
+        // printf("%d\n", centroid[i].center.id);
     }
     puts("=====================================");
 
@@ -40,29 +50,27 @@ std::vector<Group> KMeans(Group &v, unsigned k, bool plus) {
                     mid = j;
                 }   // 找到最小值，最近簇id
             }
-            // cout << mid << endl;
-            if (!centroid[mid].idConflict(v.nodes[i].id)) {
-                // 在最近簇中加入节点 i
-                // centroid[mid].nodes.push_back(v.nodes[i]);    
-                v.nodes[i].gid = mid;
-            }
+            // 标记应该加入的簇 id
+            v.nodes[i].gid = mid;
         }
-        // 清空簇，重新添加
+        // 清空簇
         for (Group &g : centroid) {
             g.nodes.clear();
         }
-        // 根据 id 重新添加簇内容，这一步是为了去重
+        // 根据 id 重新添加簇节点，这一步是为了去重
         for (Node &node : v.nodes) {
             centroid[node.gid].nodes.push_back(node);
         }
-
+        // 重新计算中心点
         for (unsigned i = 0; i < k; ++i) {
             centroid[i].reCalCenter();
         }
     }
 
     evaluation(centroid, true);
-    printf("End Of %s.\n", name);
+    printCentroidInfo(centroid);
+
+    std::cout << "End Of " << algorithm << std::endl;
     puts("=====================================\n");
     return centroid;
 }

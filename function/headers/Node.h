@@ -12,6 +12,7 @@ public:
     std::vector<double> attribute;  // 节点的属性
     int id; // 节点的id
     int gid; // 记录节点所属组的id
+    int densityNumber;  
 
     Node() {
         id = 0;
@@ -35,10 +36,16 @@ public:
     bool operator != (const Node& other);
 
     /**
+     *  拷贝
+     */
+    void operator = (const Node& other);
+
+
+    /**
      * 在一行内打印当前对象的属性值，以空格隔开
      * @author piratf
      */
-    void display();
+    void display(bool detail = true);
 };
 
 #endif
