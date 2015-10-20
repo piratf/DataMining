@@ -27,5 +27,5 @@ bool inline checkProcess(unsigned k, std::vector<Group>& centroid, std::vector<N
     return true;
 }
 
-std::vector<Group> KMeans(std::vector<Node>& v, unsigned k, bool plus = false);
+std::vector<Group> KMeans(Group &v, unsigned k, bool plus = false);
 #endif

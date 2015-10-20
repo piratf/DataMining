@@ -11,6 +11,8 @@ class Node
 public:
     std::vector<double> attribute;  // 节点的属性
     int id; // 节点的id
+    int gid; // 记录节点所属组的id
+
     Node() {
         id = 0;
     }

@@ -13,19 +13,19 @@ const int IINF = 0x3f3f3f3f;
 /**
  * Kmeans++ 版本设置初始点簇，有较低概率选择较差的点
  */
-std::vector<Group> buildInitialPointPlus(unsigned k, std::vector<Node>& v);
+std::vector<Group> buildInitialPointPlus(unsigned k, Group &v);
 
 /**
  * Kmeans 版本设置初始点簇
  */
-std::vector<Group> buildInitialPoint(unsigned k, std::vector<Node>& v);
+std::vector<Group> buildInitialPoint(unsigned k, Group &v);
 
 /**
  * 数据归一化
  * @author piratf
  * @param  v 对象向量
  */
-void normaliztion(std::vector<Node>& v);
+void normaliztion(Group &v);
 
 /**
  * 评估聚类结果的好坏

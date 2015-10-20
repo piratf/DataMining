@@ -9,13 +9,13 @@
 #include "general.h"
 #include "kmeans.h"
 
-std::vector<Group> KMeans(std::vector<Node>& v, unsigned k, bool plus) {
+std::vector<Group> KMeans(Group &v, unsigned k, bool plus) {
     const char* name = plus ? "KMeans++" : "KMeans";
     printf("Start %s:\n", name);
     puts("=====================================");
 
     std::vector<Node> preCenters(k);
-    unsigned testlen = v.size();
+    unsigned dataSize = v.nodes.size();
 
     std::vector<Group> centroid =
         plus ? buildInitialPointPlus(k, v) : buildInitialPoint(k, v);
@@ -38,19 +38,18 @@ std::vector<Group> KMeans(std::vector<Node>& v, unsigned k, bool plus) {
     unsigned times = 0;
 
     while (checkProcess(k, centroid, preCenters, times++)) {
-
-        for (unsigned i = 0; i < testlen; ++i) {
+        for (unsigned i = 0; i < dataSize; ++i) {
             mdis = DINF;
             for (unsigned j = 0; j < k; ++j) {
-                dis = sqrt(Distance::QuadraticEuclideanDistance(v[i], centroid[j].center));  // 计算欧氏距离
+                dis = sqrt(Distance::QuadraticEuclideanDistance(v.nodes[i], centroid[j].center));  // 计算欧氏距离
                 if (dis < mdis) {
                     mdis = dis;
                     mid = j;
                 }   // 找到最小值，最近簇id
             }
             // cout << mid << endl;
-            if (!centroid[mid].idConflict(v[i].id)) {
-                centroid[mid].nodes.push_back(v[i]);    // 在最近簇中加入节点i
+            if (!centroid[mid].idConflict(v.nodes[i].id)) {
+                centroid[mid].nodes.push_back(v.nodes[i]);    // 在最近簇中加入节点 i
             }
         }
         for (unsigned i = 0; i < k; ++i) {

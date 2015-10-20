@@ -8,7 +8,7 @@
 
 using vecSizeT = std::vector<double>::size_type;
 
-void inline unitTest(std::vector<Node> &test) {
+void inline unitTest(Group &test) {
     // 数据归一化
     normaliztion(test);
 
@@ -16,9 +16,10 @@ void inline unitTest(std::vector<Node> &test) {
     puts("Print Input Data:");
     puts("=====================================");
 
-    for (vecSizeT i = 0; i != test.size(); ++i) {
+    /*for (vecSizeT i = 0; i != test.size(); ++i) {
         test[i].display();
-    }
+    }*/
+    test.printData();
     puts("=====================================\n");
 
     const unsigned k = 3;
@@ -28,8 +29,8 @@ void inline unitTest(std::vector<Node> &test) {
     // KMedoids(test, k);
 }
 
-void inline matrixTest(std::vector<Node> &test) {
-    Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> > {test[0].attribute, test[1].attribute});
+void inline matrixTest(Group &test) {
+    Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> > {test.nodes[0].attribute, test.nodes[1].attribute});
     mat.printData();
     std::vector<Matrix> lu = mat.luDecomposition();
     lu[0].printData();
@@ -44,16 +45,18 @@ int main() {
             break;
         }
         // 数据集
-        std::vector<Node> test;
+        // std::vector<Node> test;
+        Group test;
         double x = 0;
         for (int i = 0; i < n; ++i) {
-            test.push_back(Node(i));
+            test.nodes.push_back(Node(i));
             for (int j = 0; j < m; ++j) {
                 scanf("%lf", &x);
-                test[i].id = i + 1;
-                test[i].attribute.push_back(x);
+                test.nodes[i].id = i + 1;
+                test.nodes[i].attribute.push_back(x);
             }
         }
+
 
         unitTest(test);
     }

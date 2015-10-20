@@ -13,6 +13,7 @@ class Group
 public:
     std::vector<Node> nodes;    // 簇中的对象向量
     Node center;    // 簇的中心对象
+    
     Group() {
     }
 
@@ -51,6 +52,12 @@ public:
      * @return 当前簇的欧氏距离平方和
      */
     double getEuclideanDistanceWithOtherCenter(const Node& otherCenter);
+
+    /**
+     * 打印当前簇的数据
+     * @author piratf
+     */
+    void printData();
 
    
 };  // 簇，存储一个簇的对象数组。

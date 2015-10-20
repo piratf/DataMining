@@ -55,24 +55,24 @@ double getSSE(std::vector<Group>& centroid, const Node& otherCenter) {
  * @author piratf
  * @param  v 输入的数据集
  */
-void normaliztion(std::vector<Node>& v) {
-    if (!v.size()) {
+void normaliztion(Group& v) {
+    if (!v.nodes.size()) {
         fprintf(stderr, "Normaliztion: error - empty vector!\n");
         return;
     }
-    auto len = v.size();
-    auto alen = v[0].attribute.size();
+    auto len = v.nodes.size();
+    auto alen = v.nodes[0].attribute.size();
     double minv = DINF, maxv = -1;
     for (decltype(len) i = 0; i != len; ++i) {
         for (decltype(len) j = 0; j != alen; ++j) {
-            minv = std::min(v[i].attribute[j], minv);
-            maxv = std::max(v[i].attribute[j], maxv);
+            minv = std::min(v.nodes[i].attribute[j], minv);
+            maxv = std::max(v.nodes[i].attribute[j], maxv);
         }
     }
     double gap = maxv - minv;
     for (decltype(len) i = 0; i != len; ++i) {
         for (decltype(len) j = 0; j != alen; ++j) {
-            v[i].attribute[j] = (v[i].attribute[j] - minv) / (gap);
+            v.nodes[i].attribute[j] = (v.nodes[i].attribute[j] - minv) / (gap);
         }
     }
 }
@@ -80,11 +80,11 @@ void normaliztion(std::vector<Node>& v) {
 /**
  * 直接取遍历点到最近中心点距离的最大值最为下一个中心点
  */
-std::vector<Group> buildInitialPoint(unsigned k, std::vector<Node>& v) {
+std::vector<Group> buildInitialPoint(unsigned k, Group &v) {
     std::vector<Group> centroid(k);
-    unsigned len = v.size();
+    unsigned len = v.nodes.size();
     srand((unsigned)time(NULL));
-    centroid[0].nodes.push_back(v[rand() % len /*0*/]);
+    centroid[0].nodes.push_back(v.nodes[rand() % len /*0*/]);
     centroid[0].center = centroid[0].nodes[0];
 
     unsigned found = 1;
@@ -95,7 +95,7 @@ std::vector<Group> buildInitialPoint(unsigned k, std::vector<Node>& v) {
         for (unsigned i = 0; i < len; ++i) {
             minv = DINF;
             for (unsigned j = 0; j < found; ++j) {
-                dis = Distance::QuadraticEuclideanDistance(centroid[j].center, v[i]);
+                dis = Distance::QuadraticEuclideanDistance(centroid[j].center, v.nodes[i]);
                 minv = std::min(minv, dis);
             }
             if (minv > maxv) {
@@ -103,8 +103,8 @@ std::vector<Group> buildInitialPoint(unsigned k, std::vector<Node>& v) {
                 mid = i;
             }
         }
-        centroid[found].nodes.push_back(v[mid]);
-        centroid[found].center = v[mid];
+        centroid[found].nodes.push_back(v.nodes[mid]);
+        centroid[found].center = v.nodes[mid];
         found++;
     }
     return centroid;
@@ -113,11 +113,11 @@ std::vector<Group> buildInitialPoint(unsigned k, std::vector<Node>& v) {
 /**
  * 让各点到最近中心点距离最大的点概率最大
  */
-std::vector<Group> buildInitialPointPlus(unsigned k, std::vector<Node>& v) {
+std::vector<Group> buildInitialPointPlus(unsigned k, Group &v) {
     std::vector<Group> centroid(k);
-    unsigned len = v.size();
+    unsigned len = v.nodes.size();
     srand((unsigned)time(NULL));
-    centroid[0].nodes.push_back(v[rand() % len /*0*/]);
+    centroid[0].nodes.push_back(v.nodes[rand() % len /*0*/]);
     centroid[0].center = centroid[0].nodes[0];
 
     unsigned found = 1;
@@ -129,7 +129,7 @@ std::vector<Group> buildInitialPointPlus(unsigned k, std::vector<Node>& v) {
         for (unsigned i = 0; i < len; ++i) {
             minv = DINF;
             for (unsigned j = 0; j < found; ++j) {
-                dis = Distance::QuadraticEuclideanDistance(centroid[j].center, v[i]);
+                dis = Distance::QuadraticEuclideanDistance(centroid[j].center, v.nodes[i]);
                 minv = std::min(minv, dis);
             }
             disList[i] = minv;  // 点到最近中心点的距离
@@ -149,8 +149,8 @@ std::vector<Group> buildInitialPointPlus(unsigned k, std::vector<Node>& v) {
             randNum -= disList[++cnt];
         }
 
-        centroid[found].nodes.push_back(v[cnt]);
-        centroid[found].center = v[cnt];
+        centroid[found].nodes.push_back(v.nodes[cnt]);
+        centroid[found].center = v.nodes[cnt];
         found++;
     }
     return centroid;
