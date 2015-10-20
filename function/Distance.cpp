@@ -11,8 +11,8 @@
 */
 double Distance::QuadraticEuclideanDistance(const Node& lhs, const Node& rhs) {
     if (lhs.attribute.size() != rhs.attribute.size()) {
-        fprintf(stderr, "%d : %d\n", lhs.attribute.size(), rhs.attribute.size());
-        fprintf(stderr, "Different kind of Nodes\n");
+        fprintf(stderr, "ERROR** Distance::QuadraticEuclideanDistance: %d : %d\n", lhs.attribute.size(), rhs.attribute.size());
+        fprintf(stderr, "ERROR** Distance::QuadraticEuclideanDistance: Different kind of Nodes\n");
         return -1;
     }
     double quadraticSum = 0;

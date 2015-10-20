@@ -117,13 +117,12 @@ std::vector<Group> buildInitialPointPlus(unsigned k, Group &v) {
     std::vector<Group> centroid(k);
     unsigned len = v.nodes.size();
     srand((unsigned)time(NULL));
-    centroid[0].nodes.push_back(v.nodes[rand() % len /*0*/]);
+    centroid[0].nodes.push_back(v.nodes[rand() % len]);
     centroid[0].center = centroid[0].nodes[0];
 
     unsigned found = 1;
     double minv = DINF, dis = 0;
     double* disList = (double*)malloc((len + 10) * sizeof(double));
-    std::cout << disList[0] << std::endl;
 
     while (found < k) {
         for (unsigned i = 0; i < len; ++i) {
@@ -135,6 +134,7 @@ std::vector<Group> buildInitialPointPlus(unsigned k, Group &v) {
             disList[i] = minv;  // 点到最近中心点的距离
         }
 
+        // 累加
         double disSum = std::accumulate(disList, disList + len, 0);
 
         disSum = 0;

@@ -17,16 +17,9 @@ std::vector<Group> KMeans(Group &v, unsigned k, bool plus) {
     std::vector<Node> preCenters(k);
     unsigned dataSize = v.nodes.size();
 
+    // 建立初始的簇中心
     std::vector<Group> centroid =
         plus ? buildInitialPointPlus(k, v) : buildInitialPoint(k, v);
-    // std::vector<Group> centroid(k);
-    // for (int i = 0; i < k; ++i) {
-    //     centroid[i].nodes.push_back(v[i]);
-    //     centroid[i].center = v[i];
-    //     preCenters.push_back(centroid[i].center);
-    // }   // 初始化各簇，设置质心
-
-    // std::vector<Group> centroid = buildInitialPoint(k, v);
 
     printf("Print initial center id:\n");
     for (unsigned i = 0; i < k; ++i) {
@@ -49,9 +42,20 @@ std::vector<Group> KMeans(Group &v, unsigned k, bool plus) {
             }
             // cout << mid << endl;
             if (!centroid[mid].idConflict(v.nodes[i].id)) {
-                centroid[mid].nodes.push_back(v.nodes[i]);    // 在最近簇中加入节点 i
+                // 在最近簇中加入节点 i
+                // centroid[mid].nodes.push_back(v.nodes[i]);    
+                v.nodes[i].gid = mid;
             }
         }
+        // 清空簇，重新添加
+        for (Group &g : centroid) {
+            g.nodes.clear();
+        }
+        // 根据 id 重新添加簇内容，这一步是为了去重
+        for (Node &node : v.nodes) {
+            centroid[node.gid].nodes.push_back(node);
+        }
+
         for (unsigned i = 0; i < k; ++i) {
             centroid[i].reCalCenter();
         }
