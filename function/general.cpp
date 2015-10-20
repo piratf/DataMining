@@ -174,37 +174,38 @@ bool cmpByDensity(const Node &lhs, const Node &rhs) {
  */
 std::vector<Group> buildInitialPointDensity(unsigned k, Group &v) {
     std::vector<Group> centroid(k);
-    // unsigned len = v.nodes.size();
+    unsigned len = v.nodes.size();
 
-    // // 计算密度参数时边界节点数量
-    // const unsigned LIMIT = 5;
-    // // 按照密度参数取多少比例的点
-    // const double FRONT = 1 / 2;
-    // const unsigned END = v.nodes.size() * FRONT;
+    // 计算密度参数时边界节点数量
+    const unsigned LIMIT = 5;
+    // 按照密度参数取多少比例的点
+    const double FRONT = 0.6;
+    const unsigned END = (double)v.nodes.size() * FRONT;
 
-    // // 对所有点两两之间计算距离
-    // std::vector<std::vector<double> > distanceMatrix;
-    // std::vector<double> densityNumber;
-    // for (unsigned i = 0; i < len; ++i) {
-    //     for (unsigned j = 0; j < len; ++j) {
-    //         distanceMatrix[i][j] = Distance::QuadraticEuclideanDistance(v.nodes[i], v.nodes[j]);
-    //     }
-    // }
+    // 对所有点两两之间计算距离
+    std::vector<std::vector<double> > distanceMatrix;
+    std::vector<double> densityNumber;
 
-    // // 对每个点到其它点的距离排序，获得每个点的密度参数
-    // for (unsigned i = 0; i < len; ++i) {
-    //     std::sort(distanceMatrix[i].begin(), distanceMatrix[i].end());
-    //     v.nodes[i].densityNumber = (distanceMatrix[i][LIMIT]);
-    // }
+    for (unsigned i = 0; i < len; ++i) {
+        distanceMatrix.push_back(std::vector<double>());
+        for (unsigned j = 0; j < len; ++j) {
+            distanceMatrix[i].push_back(Distance::QuadraticEuclideanDistance(v.nodes[i], v.nodes[j]));
+        }
+    }
 
-    // // 按照密度参数排序
-    // std::sort(v.nodes.begin(), v.nodes.end(), cmpByDensity);
+    // 对每个点到其它点的距离排序，获得每个点的密度参数
+    for (unsigned i = 0; i < len; ++i) {
+        std::sort(distanceMatrix[i].begin(), distanceMatrix[i].end());
+        v.nodes[i].densityNumber = (distanceMatrix[i][LIMIT]);
+    }
 
-    // Group v2;
-    // for (unsigned i = 0; i < END; ++i) {
-    //     v2.nodes.push_back(v.nodes[i]);
-    // }
+    // 按照密度参数排序
+    std::sort(v.nodes.begin(), v.nodes.end(), cmpByDensity);
 
-    // centroid = buildInitialPointRandomly(k, v2);
-    return centroid;
+    Group v2;
+    for (unsigned i = 0; i < END; ++i) {
+        v2.nodes.push_back(v.nodes[i]);
+    }
+
+    return buildInitialPointRandomly(k, v2);
 }

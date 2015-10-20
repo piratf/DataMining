@@ -12,15 +12,9 @@
 #include "kmeans.h"
 
 
-std::vector<Group> KMeans(Group &v, unsigned k, std::string algorithm) {
-    std::cout << "Start " << algorithm << std::endl;
-    // printf("Start %s:\n", name);
+std::vector<Group> KMeans(Group &v, unsigned k, std::vector<Group> &centroid) {
+    std::cout << "Start KMeans" << std::endl;
     puts("=====================================");
-
-    // 建立初始的簇中心
-    std::vector<Group> centroid =
-        (algorithm == "KMeans++") ? buildInitialPointRandomly(k, v)
-        : buildInitialPoint(k, v);
 
     // 用于在 checkProcess 中保存上一次运算的中心点，用于计算两次处理的差值，判断是否结束算法
     std::vector<Group> preCenters(1);
@@ -33,7 +27,6 @@ std::vector<Group> KMeans(Group &v, unsigned k, std::string algorithm) {
     printf("Print initial center id:\n");
     for (unsigned i = 0; i < k; ++i) {
         centroid[i].center.display(false);
-        // printf("%d\n", centroid[i].center.id);
     }
     puts("=====================================");
 
@@ -70,7 +63,7 @@ std::vector<Group> KMeans(Group &v, unsigned k, std::string algorithm) {
     evaluation(centroid, true);
     printCentroidInfo(centroid);
 
-    std::cout << "End Of " << algorithm << std::endl;
+    std::cout << "End Of KMeans" << std::endl;
     puts("=====================================\n");
     return centroid;
 }

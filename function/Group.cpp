@@ -24,7 +24,7 @@ void Group::reCalCenter() {
  * @param  _id [description]
  * @return     [description]
  */
-bool Group::idConflict(int _id) {
+bool Group::idConflict(unsigned _id) {
     unsigned len = nodes.size();
     for (unsigned i = 0; i < len; ++i) {
         if (nodes[i].id == _id) {

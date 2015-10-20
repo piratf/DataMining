@@ -10,9 +10,9 @@ class Node
 {
 public:
     std::vector<double> attribute;  // 节点的属性
-    int id; // 节点的id
-    int gid; // 记录节点所属组的id
-    int densityNumber;  
+    unsigned id; // 节点的id
+    unsigned gid; // 记录节点所属组的id
+    double densityNumber;  // 节点的密度参数
 
     Node() {
         id = 0;

@@ -20,7 +20,6 @@ bool inline checkProcess(unsigned k, std::vector<Group> &centroid, std::vector<G
     }
     else {
         bool flag = false;
-        // printf("preCenters size = %d\n", preCenters.size());
         // 检查 preCenters 中是否已经存在当前中心点
         for (unsigned i = 0; i < preCenters.size(); ++i) {
             flag = false;
@@ -49,5 +48,5 @@ bool inline checkProcess(unsigned k, std::vector<Group> &centroid, std::vector<G
     return true;
 }
 
-std::vector<Group> KMeans(Group &v, unsigned k, std::string algorithm = "KMeans");
+std::vector<Group> KMeans(Group &v, unsigned k, std::vector<Group> &centroid);
 #endif

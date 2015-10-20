@@ -37,7 +37,7 @@ public:
      * @param  _id [description]
      * @return     [description]
      */
-    bool idConflict(int _id);
+    bool idConflict(unsigned _id);
 
     /**
      * 获取当前簇的欧氏距离平方和

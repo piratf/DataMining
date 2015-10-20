@@ -20,8 +20,15 @@ void inline unitTest(Group &test) {
 
     const unsigned k = 3;
 
-    // KMeans(test, k);
-    KMeans(test, k, "KMeans++");
+    /** 准备测试数据 */
+    // KMeans++
+    std::vector<Group> centroid = buildInitialPointRandomly(k, test);
+    // Kmeans + Density initialize
+    // std::vector<Group> centroid = buildInitialPointDensity(k, test);
+    // KMeans
+    // std::vector<Group> centroid = buildInitialPoint(k, test);
+
+    KMeans(test, k, centroid);
     // KMedoids(test, k);
 }
 
