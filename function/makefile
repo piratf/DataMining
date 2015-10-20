@@ -1,4 +1,4 @@
-targets=general kmeans kmedoids Node Group Distance Matrix
+targets=general kmeans k-mediods Node Group Distance Matrix
 structs=$(VPATH)/Node.h $(VPATH)/Group.h $(VPATH)/Distance.h
 VPATH=headers
 CC = g++
@@ -17,8 +17,8 @@ general.o: $(VPATH)/general.h $(VPATH)/Node.h $(VPATH)/Group.h $(VPATH)/Distance
 kmeans.o: $(structs) general.o kmeans.h kmeans.cpp
 	$(CC) kmeans.cpp $(cppFlags) -c -o kmeans.o
 
-kmedoids.o: general.o kmedoids.h kmedoids.cpp
-	$(CC) kmedoids.cpp $(cppFlags) -c -o kmedoids.o
+k-mediods.o: general.o k-mediods.h k-mediods.cpp
+	$(CC) k-mediods.cpp $(cppFlags) -c -o k-mediods.o
 
 Node.o: Node.h Node.cpp
 	$(CC) Node.cpp $(cppFlags) -c -o Node.o

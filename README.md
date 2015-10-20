@@ -21,13 +21,9 @@ Algorithm can be used:
     declaration:
         std::vector<Group> KMeans(std::vector<Node>& v, unsigned k, bool plus == false)
 
-> + Kmeans++
+> + K-mediods
 
-    declaration:
-        std::vector<Group> KMeans(std::vector<Node>& v, unsigned k, bool plus == false)
-        // send true to plus to call kmeans++(randomized optimization)
-
-> + Kmedious
+    A algorithm use 
 
     declaration:
         std::vector<Group> KMedoids(std::vector<Node>& v, unsigned k, 
