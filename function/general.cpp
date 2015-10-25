@@ -104,8 +104,8 @@ void printCentroidInfo(std::vector<Group> &centroid, bool detail) {
  */
 double getSSE(std::vector<Group>& centroid, const Node& otherCenter) {
     double sum = 0;
-    int len = centroid.size();
-    for (int i = 0; i < len; ++i) {
+    const unsigned len = centroid.size();
+    for (unsigned i = 0; i < len; ++i) {
         sum += centroid[i].getEuclideanDistanceWithOtherCenter(otherCenter);
     }
     return sum;
@@ -141,11 +141,11 @@ void normaliztion(Group& v) {
 /**
  * 直接取遍历点到最近中心点距离的最大值最为下一个中心点
  */
-std::vector<Group> buildInitialPoint(unsigned k, Group v) {
+std::vector<Group> buildInitialPoint(unsigned k, const Group &v) {
     std::vector<Group> centroid(k);
     unsigned len = v.nodes.size();
     srand((unsigned)time(NULL));
-    centroid[0].nodes.push_back(v.nodes[rand() % len /*0*/]);
+    centroid[0].nodes.push_back(v.nodes[rand() % len]);
     centroid[0].center = centroid[0].nodes[0];
 
     unsigned found = 1;
@@ -174,7 +174,7 @@ std::vector<Group> buildInitialPoint(unsigned k, Group v) {
 /**
  * 让各点到最近中心点距离最大的点概率最大
  */
-std::vector<Group> buildInitialPointRandomly(unsigned k, Group v) {
+std::vector<Group> buildInitialPointRandomly(unsigned k, const Group &v) {
     std::vector<Group> centroid(k);
     unsigned len = v.nodes.size();
     srand((unsigned)time(NULL));
@@ -260,4 +260,35 @@ std::vector<Group> buildInitialPointDensity(unsigned k, Group v) {
     }
 
     return buildInitialPointRandomly(k, v2);
+}
+
+/**
+ * 获取一个向量的平均值
+ * @author piratf
+ * @param  v 向量数据
+ * @return   向量的平均值
+ */
+double getAverage(const std::vector<double> &v) {
+    double sum = 0;
+    for (const double &var : v) {
+        sum += var;
+    }
+    return sum / v.size();
+}
+
+/**
+ * 获取一个向量的方差
+ * @author piratf
+ * @param  v 向量数据
+ * @return   向量的方差
+ */
+double getVariance(const std::vector<double> &v, double average) {
+    if (average == -1) {
+        average = getAverage(v);
+    }
+    double variance = 0;
+    for (const double &var : v) {
+        variance += (var - average) * (var - average);
+    }
+    return variance / v.size();
 }

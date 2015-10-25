@@ -1,8 +1,8 @@
 targets = demo.exe
 subdir = function
 objects = subdir/libFunctions.a
-cppFlags = -std=c++11
-# cppFlags = -std=c++11 -pedantic -Wall
+# cppFlags = -std=c++11
+cppFlags = -std=c++11 -pedantic -Wall
 CC = g++
 
 $(targets): $(objects)

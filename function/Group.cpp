@@ -64,6 +64,20 @@ double Group::getMaxOfEuclideanDistance() {
 }
 
 /**
+ * 获取当前簇的欧氏距离平方和
+ * @author piratf
+ * @return 当前簇的欧氏距离平方和
+ */
+double Group::getEuclideanDistanceWithOtherCenter(const Node& otherCenter) {
+    double sum = 0.0;
+    unsigned len = nodes.size();
+    for (unsigned i = 0; i < len; ++i) {
+        sum += Distance::QuadraticEuclideanDistance(nodes[i], otherCenter);
+    }
+    return sum;
+}
+
+/**
  * 打印各分量的均值
  * @author piratf
  */
@@ -114,20 +128,6 @@ std::vector<double> Group::componentVariance(bool display) {
         }
     }
     return variance;
-}
-
-/**
- * 获取当前簇的欧氏距离平方和
- * @author piratf
- * @return 当前簇的欧氏距离平方和
- */
-double Group::getEuclideanDistanceWithOtherCenter(const Node& otherCenter) {
-    double sum = 0.0;
-    unsigned len = nodes.size();
-    for (unsigned i = 0; i < len; ++i) {
-        sum += Distance::QuadraticEuclideanDistance(nodes[i], otherCenter);
-    }
-    return sum;
 }
 
 /**

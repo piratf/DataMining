@@ -54,6 +54,14 @@ public:
     double getMaxOfEuclideanDistance();
 
     /**
+     * 返回当前簇到特定点的欧式距离平方和
+     * @author piratf
+     * @param  otherCenter 特定的店
+     * @return             当前簇到特定点的欧式距离平方和
+     */
+    double getEuclideanDistanceWithOtherCenter(const Node& otherCenter);
+
+    /**
      * 打印各分量的均值
      * @author piratf
      */
@@ -64,14 +72,6 @@ public:
      * @author piratf
      */
     std::vector<double> componentVariance(bool display = true);
-
-    /**
-     * 返回当前簇到特定点的欧式距离平方和
-     * @author piratf
-     * @param  otherCenter 特定的店
-     * @return             当前簇到特定点的欧式距离平方和
-     */
-    double getEuclideanDistanceWithOtherCenter(const Node& otherCenter);
 
     /**
      * 打印当前簇的数据

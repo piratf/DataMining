@@ -13,12 +13,12 @@ const int IINF = 0x3f3f3f3f;
 /**
  * Kmeans++ 版本设置初始点簇，有较低概率选择较差的点
  */
-std::vector<Group> buildInitialPointRandomly(unsigned k, Group v);
+std::vector<Group> buildInitialPointRandomly(unsigned k, const Group &v);
 
 /**
  * Kmeans 版本设置初始点簇
  */
-std::vector<Group> buildInitialPoint(unsigned k, Group v);
+std::vector<Group> buildInitialPoint(unsigned k, const Group &v);
 
 bool cmpByDensity(const Node &lhs, const Node &rhs);
 
@@ -72,4 +72,19 @@ double getSSE(const std::vector<Group>& centroid, const Node& center);
  */
 void printCentroidInfo(std::vector<Group> &centroid, bool detail = false);
 
+/**
+ * 获取一个向量的平均值
+ * @author piratf
+ * @param  v 向量数据
+ * @return   向量的平均值
+ */
+double getAverage(const std::vector<double> &v);
+
+/**
+ * 获取一个向量的方差
+ * @author piratf
+ * @param  v 向量数据
+ * @return   向量的方差
+ */
+double getVariance(const std::vector<double> &v, double average = -1);
 #endif

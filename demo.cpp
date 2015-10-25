@@ -35,24 +35,25 @@ void inline unitTest(Group &test) {
     std::vector<Group> result;
     std::vector<double> avg(k);
     double SSE = 0;
+    // 记录每次的 SSE 值
+    std::vector<double> vecSSE;
     time_t start = std::clock();
     // 重复实验的次数
     const double TIMES = 1000;
     for (unsigned i = 0; i < TIMES; ++i) {
         result = KMeans(test, k, buildInitialPoint(k, test), false);
+        SSE = 0;
         for (unsigned j = 0; j < result.size(); ++j) {
-            avg[j] += result[j].nodes.size();
-            SSE += evaluation(result, false);
+            SSE += result[j].getSumOfEuclideanDistance();
+            vecSSE.push_back(SSE / result.size());
         }
     }
     time_t end = std::clock();
+    freopen("buildInitialPoint.txt", "a+", stdout);
+    printf("The average of SSE = %lf\n", getAverage(vecSSE));
+    printf("The variance of SSE = %lf\n", getVariance(vecSSE));
     printf("the running time is : %f\n", double(end - start) / CLOCKS_PER_SEC);
-
-    for (unsigned j = 0; j < k; ++j) {
-        printf("average size of cluster %d is: %lf\n", j + 1, avg[j] / TIMES);
-    }
-    printf("SSE = %lf\n", SSE / TIMES);
-
+    puts("===============================================");
     // KMedoids(test, k, centroid);
 }
 
@@ -84,8 +85,9 @@ int main() {
             }
         }
 
-
-        unitTest(test);
+        for (unsigned i = 0; i < 10; ++i) {
+            unitTest(test);
+        }
     }
     return 0;
 }
