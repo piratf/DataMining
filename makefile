@@ -6,7 +6,7 @@ cppFlags = -std=c++11 -pedantic -Wall
 CC = g++
 
 $(targets): $(objects)
-	g++ demo.cpp -Ifunction/headers -Lfunction -lfunctions $(cppFlags) -o demo.exe
+	g++ demo.cpp -I$(subdir)/headers -L$(subdir) -lFunctions $(cppFlags) -o a.out
 
 subdir/libFunctions.a:
 	cd $(subdir) && $(MAKE)

@@ -1,0 +1,8 @@
+buildInitialPointDensity
+The average of SSE = 20.3694
+The variance of SSE = 144.508
+The running time is: 1136.14
+===============================================
+ce of SSE = 146.870044
+the running time is : 1138.470000
+===============================================
