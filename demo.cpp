@@ -32,8 +32,9 @@ void inline unitTest(Group &test) {
     // std::vector<Group> centroid = buildInitialPointDensity(k, test);
     // KMeans
     // std::vector<Group> centroid = buildInitialPoint(k, test);
-
-
+	
+    output << "buildInitialPoint" << std::endl;
+	output << "===============================================" << std::endl;
     // 重复运行测试
     std::vector<Group> result;
     std::vector<double> avg(k);
@@ -45,7 +46,9 @@ void inline unitTest(Group &test) {
     const double TIMES = 100000;
     for (unsigned i = 0; i < TIMES; ++i) {
 	printf("running: %d\r", i);
-        result = KMeans(test, k, buildInitialPointRandomly(k, test), false);
+        // result = KMeans(test, k, buildInitialPointRandomly(k, test), false);
+        // result = KMeans(test, k, buildInitialPointRandomly(k, test), false);
+        result = KMeans(test, k, buildInitialPoint(k, test), false);
         SSE = 0;
         for (unsigned j = 0; j < result.size(); ++j) {
             SSE += result[j].getSumOfEuclideanDistance();
@@ -75,8 +78,6 @@ void inline matrixTest(Group &test) {
 int main() {
     freopen("./data/iris.txt", "r", stdin);
     // freopen("output.txt", "w+", stdout);
-    output << "buildInitialPointDensity" << std::endl;
-	output << "===============================================" << std::endl;
     int n, m;
     while (~scanf("%d %d", &n, &m)) {
         if (n == 0) {
