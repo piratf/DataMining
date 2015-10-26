@@ -49,7 +49,6 @@ void inline unitTest(Group &test) {
         }
     }
     time_t end = std::clock();
-    freopen("buildInitialPoint.txt", "a+", stdout);
     printf("The average of SSE = %lf\n", getAverage(vecSSE));
     printf("The variance of SSE = %lf\n", getVariance(vecSSE));
     printf("the running time is : %f\n", double(end - start) / CLOCKS_PER_SEC);
@@ -67,6 +66,7 @@ void inline matrixTest(Group &test) {
 
 int main() {
     freopen(".\\data\\iris.txt", "r", stdin);
+    freopen("output.txt", "w+", stdout);
     int n, m;
     while (~scanf("%d %d", &n, &m)) {
         if (n == 0) {
@@ -85,9 +85,7 @@ int main() {
             }
         }
 
-        for (unsigned i = 0; i < 10; ++i) {
-            unitTest(test);
-        }
+        unitTest(test);
     }
     return 0;
 }
