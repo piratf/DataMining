@@ -9,18 +9,115 @@
 #include <fstream>
 
 using vecSizeT = std::vector<double>::size_type;
+const double TIMES = 100000;
 
 std::ofstream output("output.txt", std::ofstream::out | std::ofstream::app);
 
-void inline unitTest(Group &test) {
+void inline unitTestKKMeansDensity(Group &test) {
     // 数据归一化
     // normaliztion(test);
 
     // 输出读入的数据
-    puts("Print Input Data:");
-    puts("=====================================");
+    // puts("Print Input Data:");
+    // puts("=====================================");
     // test.display();
-    puts("=====================================\n");
+    // puts("=====================================\n");
+
+    // k 值
+    const unsigned k = 3;
+
+    /** 准备测试数据 */
+    // Kmeans + Density initialize
+    // std::vector<Group> centroid = buildInitialPointDensity(k, test);
+
+    output << "===============================================" << std::endl;
+    output << "buildInitialPointDensity" << std::endl;
+    output << "===============================================" << std::endl;
+    // 重复运行测试
+    std::vector<Group> result;
+    std::vector<double> avg(k);
+    double SSE = 0;
+    // 记录每次的 SSE 值
+    std::vector<double> vecSSE;
+    time_t start = std::clock();
+    for (unsigned i = 0; i < TIMES; ++i) {
+        printf("running: %d\r", i);
+        result = KMeans(test, k, buildInitialPointDensity(k, test), false);
+        SSE = 0;
+        for (unsigned j = 0; j < result.size(); ++j) {
+            SSE += result[j].getSumOfEuclideanDistance();
+            vecSSE.push_back(SSE / result.size());
+        }
+    }
+    time_t end = std::clock();
+    output << "The average of SSE = " << getAverage(vecSSE) << std::endl;
+    output << "The variance of SSE = " << getVariance(vecSSE) << std::endl;
+    output << "The running time is: " << double(end - start) / CLOCKS_PER_SEC << std::endl;
+    // printf("The average of SSE = %lf\n", getAverage(vecSSE));
+    // printf("The variance of SSE = %lf\n", getVariance(vecSSE));
+    printf("the running time is : %f\n", double(end - start) / CLOCKS_PER_SEC);
+    output << "===============================================" << std::endl;
+    // puts("===============================================");
+    // KMedoids(test, k, centroid);
+}
+
+void inline unitTestKMeansNormal(Group &test) {
+    // 数据归一化
+    // normaliztion(test);
+
+    // 输出读入的数据
+    // puts("Print Input Data:");
+    // puts("=====================================");
+    // test.display();
+    // puts("=====================================\n");
+
+    // k 值
+    const unsigned k = 3;
+
+    /** 准备测试数据 */
+    // KMeans
+    // std::vector<Group> centroid = buildInitialPoint(k, test);
+
+    output << "===============================================" << std::endl;
+    output << "buildInitialPoint" << std::endl;
+    output << "===============================================" << std::endl;
+    // 重复运行测试
+    std::vector<Group> result;
+    std::vector<double> avg(k);
+    double SSE = 0;
+    // 记录每次的 SSE 值
+    std::vector<double> vecSSE;
+    time_t start = std::clock();
+    for (unsigned i = 0; i < TIMES; ++i) {
+        printf("running: %d\r", i);
+        result = KMeans(test, k, buildInitialPoint(k, test), false);
+        SSE = 0;
+        for (unsigned j = 0; j < result.size(); ++j) {
+            SSE += result[j].getSumOfEuclideanDistance();
+            vecSSE.push_back(SSE / result.size());
+        }
+    }
+    time_t end = std::clock();
+    output << "The average of SSE = " << getAverage(vecSSE) << std::endl;
+    output << "The variance of SSE = " << getVariance(vecSSE) << std::endl;
+    output << "The running time is: " << double(end - start) / CLOCKS_PER_SEC << std::endl;
+    // printf("The average of SSE = %lf\n", getAverage(vecSSE));
+    // printf("The variance of SSE = %lf\n", getVariance(vecSSE));
+    printf("the running time is : %f\n", double(end - start) / CLOCKS_PER_SEC);
+    output << "===============================================" << std::endl;
+    // puts("===============================================");
+    // KMedoids(test, k, centroid);
+}
+
+void inline unitTestKMeansRandomly(Group &test) {
+    // 数据归一化
+    // normaliztion(test);
+
+    // 输出读入的数据
+    // puts("Print Input Data:");
+    // puts("=====================================");
+    // test.display();
+    // puts("=====================================\n");
 
     // k 值
     const unsigned k = 3;
@@ -32,9 +129,10 @@ void inline unitTest(Group &test) {
     // std::vector<Group> centroid = buildInitialPointDensity(k, test);
     // KMeans
     // std::vector<Group> centroid = buildInitialPoint(k, test);
-	
-    output << "buildInitialPoint" << std::endl;
-	output << "===============================================" << std::endl;
+
+    output << "===============================================" << std::endl;
+    output << "buildInitialPointRandomly" << std::endl;
+    output << "===============================================" << std::endl;
     // 重复运行测试
     std::vector<Group> result;
     std::vector<double> avg(k);
@@ -43,12 +141,9 @@ void inline unitTest(Group &test) {
     std::vector<double> vecSSE;
     time_t start = std::clock();
     // 重复实验的次数
-    const double TIMES = 100000;
     for (unsigned i = 0; i < TIMES; ++i) {
-	printf("running: %d\r", i);
-        // result = KMeans(test, k, buildInitialPointRandomly(k, test), false);
-        // result = KMeans(test, k, buildInitialPointRandomly(k, test), false);
-        result = KMeans(test, k, buildInitialPoint(k, test), false);
+        printf("running: %d\r", i);
+        result = KMeans(test, k, buildInitialPointRandomly(k, test), false);
         SSE = 0;
         for (unsigned j = 0; j < result.size(); ++j) {
             SSE += result[j].getSumOfEuclideanDistance();
@@ -58,11 +153,11 @@ void inline unitTest(Group &test) {
     time_t end = std::clock();
     output << "The average of SSE = " << getAverage(vecSSE) << std::endl;
     output << "The variance of SSE = " << getVariance(vecSSE) << std::endl;
-	output << "The running time is: " << double(end - start) / CLOCKS_PER_SEC << std::endl;
+    output << "The running time is: " << double(end - start) / CLOCKS_PER_SEC << std::endl;
     // printf("The average of SSE = %lf\n", getAverage(vecSSE));
     // printf("The variance of SSE = %lf\n", getVariance(vecSSE));
     printf("the running time is : %f\n", double(end - start) / CLOCKS_PER_SEC);
-	output << "===============================================" << std::endl;
+    output << "===============================================" << std::endl;
     // puts("===============================================");
     // KMedoids(test, k, centroid);
 }
@@ -96,7 +191,9 @@ int main() {
             }
         }
 
-        unitTest(test);
+        unitTestKMeansNormal(test);
+        unitTestKMeansRandomly(test);
+        unitTestKKMeansDensity(test);
     }
     output.close();
     return 0;
