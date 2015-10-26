@@ -6,8 +6,11 @@
 #include <vector>
 #include <iostream>
 #include <ctime>
+#include <fstream>
 
 using vecSizeT = std::vector<double>::size_type;
+
+std::ofstream output("output.txt", std::ofstream::out | std::ofstream::app);
 
 void inline unitTest(Group &test) {
     // 数据归一化
@@ -39,9 +42,10 @@ void inline unitTest(Group &test) {
     std::vector<double> vecSSE;
     time_t start = std::clock();
     // 重复实验的次数
-    const double TIMES = 1000;
+    const double TIMES = 100000;
     for (unsigned i = 0; i < TIMES; ++i) {
-        result = KMeans(test, k, buildInitialPoint(k, test), false);
+	printf("running: %d\r", i);
+        result = KMeans(test, k, buildInitialPointRandomly(k, test), false);
         SSE = 0;
         for (unsigned j = 0; j < result.size(); ++j) {
             SSE += result[j].getSumOfEuclideanDistance();
@@ -49,11 +53,14 @@ void inline unitTest(Group &test) {
         }
     }
     time_t end = std::clock();
-    freopen("buildInitialPoint.txt", "a+", stdout);
-    printf("The average of SSE = %lf\n", getAverage(vecSSE));
-    printf("The variance of SSE = %lf\n", getVariance(vecSSE));
+    output << "The average of SSE = " << getAverage(vecSSE) << std::endl;
+    output << "The variance of SSE = " << getVariance(vecSSE) << std::endl;
+	output << "The running time is: " << double(end - start) / CLOCKS_PER_SEC << std::endl;
+    // printf("The average of SSE = %lf\n", getAverage(vecSSE));
+    // printf("The variance of SSE = %lf\n", getVariance(vecSSE));
     printf("the running time is : %f\n", double(end - start) / CLOCKS_PER_SEC);
-    puts("===============================================");
+	output << "===============================================" << std::endl;
+    // puts("===============================================");
     // KMedoids(test, k, centroid);
 }
 
@@ -66,7 +73,10 @@ void inline matrixTest(Group &test) {
 }   // unfinished, could cause error
 
 int main() {
-    freopen(".\\data\\iris.txt", "r", stdin);
+    freopen("./data/iris.txt", "r", stdin);
+    // freopen("output.txt", "w+", stdout);
+    output << "buildInitialPointDensity" << std::endl;
+	output << "===============================================" << std::endl;
     int n, m;
     while (~scanf("%d %d", &n, &m)) {
         if (n == 0) {
@@ -85,9 +95,8 @@ int main() {
             }
         }
 
-        for (unsigned i = 0; i < 10; ++i) {
-            unitTest(test);
-        }
+        unitTest(test);
     }
+    output.close();
     return 0;
 }
