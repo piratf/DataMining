@@ -3,7 +3,7 @@
 #include "kmediods.h"
 #include "Distance.h"
 #include "Matrix.h"
-#include "kNearestNeighbor.h"
+#include "knn.h"
 #include <vector>
 #include <iostream>
 #include <ctime>

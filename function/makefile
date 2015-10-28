@@ -1,4 +1,4 @@
-targets=general kmeans kmediods Node Group Distance Matrix kNearestNeighbor
+targets=general kmeans kmediods Node Group Distance Matrix knn
 structs=$(VPATH)/Node.h $(VPATH)/Group.h $(VPATH)/Distance.h
 VPATH=headers
 CC = g++
@@ -9,7 +9,7 @@ cppFlags = $(patsubst %,-I%,$(subst :, ,$(VPATH))) -std=c++11 -pedantic -Wall
 openmpFlags = -fopenmp -DOPENMP
 
 .PHONY: all
-all: Node.o Group.o Distance.o general.o kmeans.o kmediods.o Matrix.o kNearestNeighbor.o
+all: Node.o Group.o Distance.o general.o kmeans.o kmediods.o Matrix.o knn.o
 	ar -cr libFunctions.a $(foreach n, $(targets), $(n).o)
 
 general.o: $(VPATH)/general.h $(VPATH)/Node.h $(VPATH)/Group.h $(VPATH)/Distance.h general.cpp
@@ -33,8 +33,8 @@ Distance.o: Distance.h Matrix.h Node.h Group.h Distance.cpp
 Matrix.o: Matrix.h Matrix.cpp
 	$(CC) Matrix.cpp $(cppFlags) -c -o Matrix.o
 
-kNearestNeighbor.o: kNearestNeighbor.h kNearestNeighbor.cpp
-	$(CC) kNearestNeighbor.cpp $(cppFlags) -c -o kNearestNeighbor.o
+knn.o: knn.h knn.cpp
+	$(CC) knn.cpp $(cppFlags) -c -o knn.o
 
 .PHONY: clean cleanall
 cleanall:
