@@ -4,6 +4,7 @@
 #include "Distance.h"
 #include "Matrix.h"
 #include "knn.h"
+#include "knnopenmp.h"
 #include <vector>
 #include <iostream>
 #include <ctime>
@@ -245,7 +246,8 @@ void inline readDigitRecognizerTest(Group &test, const unsigned size = 0) {
     getchar();
     // gets(head);
     for ( ; ; ) {
-        test.nodes.push_back(Node(0));
+        // with a increment id
+        test.nodes.push_back(Node(i));
         for ( ; ; ) {
             test.nodes[i].attribute.push_back(readUnsigned(ch));
             if (ch == '\n') {
@@ -273,11 +275,11 @@ void inline readDigitRecognizerTest(Group &test, const unsigned size = 0) {
 
 void inline unitTestKNN() {
     Group train;
-    // readDigitRecognizerTrain(train);
+    readDigitRecognizerTrain(train);
     Group test;
-    // readDigitRecognizerTest(test);
+    readDigitRecognizerTest(test);
 
-    knn(train, test);
+    knnopenmp(train, test);
 }
 
 void inline test() {
@@ -289,7 +291,7 @@ void inline test() {
     unitTestKNN();
     time_t end = std::clock();
     fclose(stdin);
-    output.close();
+
     double sec = double(end - start) / CLOCKS_PER_SEC;
     printf("the running time of main is : %f\n", sec);
     resultTimeFile << "the running time of main is : " << sec << std::endl;
@@ -301,5 +303,6 @@ int main() {
     nice(-20);
 #endif
     test();
+    output.close();
     return 0;
 }

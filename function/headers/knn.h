@@ -1,5 +1,5 @@
-#ifndef KNERESTNEIGHBOR_H
-#define KNERESTNEIGHBOR_H
+#ifndef KNN_H
+#define KNN_H
 
 #include "Node.h"
 #include "Group.h"
