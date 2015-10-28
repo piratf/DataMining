@@ -1,12 +1,14 @@
 #include "general.h"
 #include "kmeans.h"
-#include "k-mediods.h"
+#include "kmediods.h"
 #include "Distance.h"
 #include "Matrix.h"
+#include "kNearestNeighbor.h"
 #include <vector>
 #include <iostream>
 #include <ctime>
 #include <fstream>
+#include <unistd.h>
 
 using vecSizeT = std::vector<double>::size_type;
 const double TIMES = 100000;
@@ -162,17 +164,8 @@ void inline unitTestKMeansRandomly(Group &test) {
     // KMedoids(test, k, centroid);
 }
 
-void inline matrixTest(Group &test) {
-    Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> > {test.nodes[0].attribute, test.nodes[1].attribute});
-    mat.printData();
-    std::vector<Matrix> lu = mat.luDecomposition();
-    lu[0].printData();
-    lu[1].printData();
-}   // unfinished, could cause error
-
-int main() {
+void inline TestIris() {
     freopen("./data/iris.txt", "r", stdin);
-    // freopen("output.txt", "w+", stdout);
     int n, m;
     while (~scanf("%d %d", &n, &m)) {
         if (n == 0) {
@@ -190,11 +183,123 @@ int main() {
                 test.nodes[i].attribute.push_back(x);
             }
         }
-
         unitTestKMeansNormal(test);
         unitTestKMeansRandomly(test);
         unitTestKKMeansDensity(test);
     }
+}
+
+void inline matrixTest(Group &test) {
+    Matrix mat = Matrix::getCovarianceMatrix(std::vector<std::vector<double> > {test.nodes[0].attribute, test.nodes[1].attribute});
+    mat.printData();
+    std::vector<Matrix> lu = mat.luDecomposition();
+    lu[0].printData();
+    lu[1].printData();
+}   // unfinished, could cause error
+
+unsigned inline readUnsigned(char &ch) {
+    unsigned num = 0;
+    while ((ch = getchar()) != ',' && ch != '\n') {
+        num = num * 10 + ch;
+    }
+    // ungetc(ch, stdin);
+    return num;
+}
+
+void inline readDigitRecognizerTrain(Group &train) {
+    freopen("./data/DigitRecognizer/train.csv", "r", stdin);
+    unsigned label = 0;
+    char *head = new char[7000];
+    char ch = 0;
+    unsigned i = 0;
+    fgets(head, 7000, stdin);
+    // getchar();
+    while (~scanf("%u,", &label)) {
+        train.nodes.push_back(Node(label));
+        for ( ; ; ) {
+            train.nodes[i].attribute.push_back(readUnsigned(ch));
+            if (ch == '\n') {
+                break;
+            }
+        }
+        ++i;
+    }
+
+    delete[] head;
+#ifdef linux
+    printf("size of train: %lu\n", train.nodes.size());
+    printf("size of trainNode: %lu\n", train.nodes[0].attribute.size());
+#endif
+#ifdef _WIN32
+    printf("size of train: %u\n", train.nodes.size());
+    printf("size of trainNode: %u\n", train.nodes[0].attribute.size());
+#endif
+}
+
+void inline readDigitRecognizerTest(Group &test, const unsigned size = 0) {
+    freopen("./data/DigitRecognizer/test.csv", "r", stdin);
+    char *head = new char[7000];
+    char ch = 0;
+    unsigned i = 0;
+    fgets(head, 7000, stdin);
+    getchar();
+    // gets(head);
+    for ( ; ; ) {
+        test.nodes.push_back(Node(0));
+        for ( ; ; ) {
+            test.nodes[i].attribute.push_back(readUnsigned(ch));
+            if (ch == '\n') {
+                break;
+            }
+        }
+        ++i;
+        if ((ch = getchar()) == 'E') {
+            break;
+        }
+        ungetc(ch, stdin);
+    }
+
+    delete[] head;
+
+#ifdef linux
+    printf("size of test: %lu\n", test.nodes.size());
+    printf("size of testNode: %lu\n", test.nodes[0].attribute.size());
+#endif
+#ifdef _WIN32
+    printf("size of test: %u\n", test.nodes.size());
+    printf("size of testNode: %u\n", test.nodes[0].attribute.size());
+#endif
+}
+
+void inline unitTestKNN() {
+    Group train;
+    // readDigitRecognizerTrain(train);
+    Group test;
+    // readDigitRecognizerTest(test);
+
+    knn(train, test);
+}
+
+void inline test() {
+    const char runningTimePath[] = "data/DigitRecognizer/runningTimeFile.txt";
+    std::ofstream resultTimeFile;
+    resultTimeFile.open(runningTimePath, std::ofstream::out | std::ofstream::app);
+
+    time_t start = std::clock();
+    unitTestKNN();
+    time_t end = std::clock();
+    fclose(stdin);
     output.close();
+    double sec = double(end - start) / CLOCKS_PER_SEC;
+    printf("the running time of main is : %f\n", sec);
+    resultTimeFile << "the running time of main is : " << sec << std::endl;
+    resultTimeFile.close();
+}
+
+int main() {
+#ifdef linux
+    nice(-20);
+#endif
+    test();
     return 0;
 }

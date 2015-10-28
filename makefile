@@ -4,9 +4,10 @@ objects = subdir/libFunctions.a
 # cppFlags = -std=c++11
 cppFlags = -std=c++11 -pedantic -Wall
 CC = g++
+openmpFlags = -fopenmp -DOPENMP
 
 $(targets): $(objects)
-	g++ demo.cpp -I$(subdir)/headers -L$(subdir) -lFunctions $(cppFlags) -o a.out
+	g++ demo.cpp -I$(subdir)/headers -L$(subdir) -lFunctions $(cppFlags)  $(openmpFlags) -o a.out
 
 subdir/libFunctions.a:
 	cd $(subdir) && $(MAKE)
