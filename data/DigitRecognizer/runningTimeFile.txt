@@ -1,0 +1,5 @@
+the running time of main is : 7.986
+the running time of main is : 14.068
+the running time of main is : 14.913
+the running time of main is : 7.187
+the running time of main is : 7.629

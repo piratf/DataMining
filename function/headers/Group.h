@@ -17,6 +17,10 @@ public:
     Group() {
     }
 
+    Group(unsigned length) {
+        nodes = std::vector<Node>(length);
+    }
+
     /**
      * 输入中心点的构造函数
      */

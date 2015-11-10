@@ -87,4 +87,5 @@ double getAverage(const std::vector<double> &v);
  * @return   向量的方差
  */
 double getVariance(const std::vector<double> &v, double average = -1);
+
 #endif

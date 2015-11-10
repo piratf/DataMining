@@ -24,4 +24,10 @@ struct TestDistances
 
 void knn(Group &train, Group &test);
 
+/**
+ * knn algorithm with openmp multithreading
+ * @author piratf
+ */
+void knnRoundTest(const int nRound, const Group &train, const Group &test);
+
 #endif
