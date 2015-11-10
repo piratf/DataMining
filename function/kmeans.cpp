@@ -81,6 +81,7 @@ std::vector<Group> KMeans(Group &v, unsigned k, std::vector<Group> centroid, boo
     double dis = 0, mdis = 0, mid = 0;
     unsigned times = 0;
 
+    // 算法主循环
     while (checkProcess(k, centroid, preCenters, times++)) {
         for (unsigned i = 0; i < dataSize; ++i) {
             mdis = DINF;
@@ -108,6 +109,7 @@ std::vector<Group> KMeans(Group &v, unsigned k, std::vector<Group> centroid, boo
         }
     }
 
+    // 打印结果
     if (display) {
         evaluation(centroid, true);
         evaluateAvg(centroid);

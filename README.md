@@ -1,26 +1,24 @@
 # DataMining
-Some original code on data mining.(unfinished)
+Some original code on data mining.(still learning)
 
 Usage: use `make` command to compile files
 
 complier version: `g++ 4.9.2`
 - Use `-std=c++11`(recommend: `-pedantic -Wall`) flag for compiling.
 
-**:**Trying `openmp` now, most of gcc compiler already have this feature.
-
-If you don't want to use that, notice that don't link the knnopenmp.o and remove the `$(openmpFlags)` in "makefile".
-
 You can modify it in `makefile`.
 
 ---
+
+**:->**Trying `openmp` in `knnopenmp.cpp` now, most of gcc compiler already have this feature.
+
+If you don't want to use that, notice that don't link the knnopenmp.o and remove the `$(openmpFlags)` in `makefile`.
 
 if you got error `version 'CXXABI_1.3.8' not found` when compiling, may this link could help: [How to fix: [program name] /usr/lib/x86_64-linux-gnu/libstdc++.so.6: version CXXABI_1.3.8' not found (required by [program name])](http://stackoverflow.com/questions/20357033/how-to-fix-program-name-usr-lib-x86-64-linux-gnu-libstdc-so-6-version-cxx)
 
 ---
 
-run `demo.exe` to test data files.
-
-more details in file `demo.cpp`
+more details in file `demo.cpp`, use it to test the algorithms.
 
 ---
 

@@ -56,8 +56,6 @@ void inline unitTestKKMeansDensity(Group &test, std::ofstream &output) {
     output << "The average of SSE = " << getAverage(vecSSE) << std::endl;
     output << "The variance of SSE = " << getVariance(vecSSE) << std::endl;
     output << "The running time is: " << double(end - start) / CLOCKS_PER_SEC << std::endl;
-    // printf("The average of SSE = %lf\n", getAverage(vecSSE));
-    // printf("The variance of SSE = %lf\n", getVariance(vecSSE));
     printf("the running time is : %f\n", double(end - start) / CLOCKS_PER_SEC);
     output << "===============================================" << std::endl;
     // puts("===============================================");
@@ -230,14 +228,14 @@ void inline readDigitRecognizerTrain(Group &train) {
     }
 
     delete[] head;
-#ifdef linux
+    #ifdef linux
     printf("size of train: %lu\n", train.nodes.size());
     printf("size of trainNode: %lu\n", train.nodes[0].attribute.size());
-#endif
-#ifdef _WIN32
+    #endif
+    #ifdef _WIN32
     printf("size of train: %u\n", train.nodes.size());
     printf("size of trainNode: %u\n", train.nodes[0].attribute.size());
-#endif
+    #endif
     fflush(stdout);
 }
 
@@ -267,14 +265,14 @@ void inline readDigitRecognizerTest(Group &test, const unsigned size = 0) {
 
     delete[] head;
 
-#ifdef linux
+    #ifdef linux
     printf("size of test: %lu\n", test.nodes.size());
     printf("size of testNode: %lu\n", test.nodes[0].attribute.size());
-#endif
-#ifdef _WIN32
+    #endif
+    #ifdef _WIN32
     printf("size of test: %u\n", test.nodes.size());
     printf("size of testNode: %u\n", test.nodes[0].attribute.size());
-#endif
+    #endif
 }
 
 void inline unitTestKNN() {
@@ -359,9 +357,9 @@ void inline testID3() {
 }
 
 int main() {
-#ifdef linux
+    #ifdef linux
     nice(-20);
-#endif
+    #endif
     puts("==================start algorithm===================\n");
     fflush(stdout);
     roundTestKNN(10);
